@@ -10,8 +10,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setTheme(R.style.Theme_LGConnect)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        setContentView(R.layout.activity_main)
 
         val homeFragment: Fragment = HomeFragment()
         val mapsFragment: Fragment = MapsFragment()

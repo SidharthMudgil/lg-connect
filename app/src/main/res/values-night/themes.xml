@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.LGConnect" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -14,8 +14,11 @@
         <item name="android:windowBackground">@color/grey_700</item>
     </style>
 
-    <style name="Theme.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="android:statusBarColor">@color/grey_900</item>
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_app_foreground</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/grey_700</item>
+        <item name="windowSplashScreenBackground">@color/grey_700</item>
+        <item name="postSplashScreenTheme">@style/Theme.LGConnect</item>
     </style>
 </resources>

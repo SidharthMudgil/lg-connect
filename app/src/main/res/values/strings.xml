@@ -3,4 +3,8 @@
     <string name="home">Home</string>
     <string name="maps">Maps</string>
     <string name="controller">Controller</string>
+    <string name="label_rv_wonders">Visit 7 Wonders</string>
+    <string name="label_rv_charts">Send Charts</string>
+    <string name="label_rv_markers">My Markers</string>
+    <string name="lg_connect">LG Connect</string>
 </resources>

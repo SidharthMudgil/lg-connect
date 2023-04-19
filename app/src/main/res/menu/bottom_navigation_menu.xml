@@ -3,19 +3,25 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/ic_home_filled"
+        android:icon="@drawable/ic_home"
         android:title="@string/home" />
 
     <item
         android:id="@+id/maps"
         android:enabled="true"
-        android:icon="@drawable/ic_map_filled"
+        android:icon="@drawable/ic_maps"
         android:title="@string/maps" />
 
     <item
         android:id="@+id/controller"
         android:enabled="true"
-        android:icon="@drawable/ic_controller_filled"
+        android:icon="@drawable/ic_controller"
         android:title="@string/controller" />
+
+    <item
+        android:id="@+id/settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_setting"
+        android:title="@string/settings" />
 
 </menu>

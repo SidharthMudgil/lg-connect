@@ -1,66 +1,67 @@
 package com.sidharth.lgconnect
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.sidharth.lgconnect.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val homeFragment: Fragment = HomeFragment()
         val mapsFragment: Fragment = MapsFragment()
         val controllerFragment: Fragment = ControllerFragment()
+        val settingsFragment: Fragment = SettingsFragment()
 
-        val fragmentManager: FragmentManager = supportFragmentManager
+        var activeFragment: Fragment = homeFragment
 
-        fragmentManager.beginTransaction()
-            .add(R.id.fragment_container, homeFragment, "home-fragment")
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, homeFragment, "home").hide(homeFragment)
+            .add(R.id.fragment_container, mapsFragment, "maps").hide(mapsFragment)
+            .add(R.id.fragment_container, controllerFragment, "controller").hide(controllerFragment)
+            .add(R.id.fragment_container, settingsFragment, "settings").hide(settingsFragment)
             .commit()
 
-        fragmentManager.beginTransaction()
-            .add(R.id.fragment_container, controllerFragment, "controller-fragment")
-            .hide(controllerFragment)
-            .commit()
-
-        fragmentManager.beginTransaction()
-            .add(R.id.fragment_container, mapsFragment, "maps-fragment")
-            .hide(mapsFragment)
-            .commit()
-
-        var active: Fragment = homeFragment
-
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-        bottomNavigationView.setOnItemSelectedListener {
+        binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
-                    fragmentManager.beginTransaction()
-                        .hide(active).show(homeFragment).commit()
-                    active = homeFragment
+                    activeFragment = switchFragment(homeFragment, activeFragment)
                     true
                 }
                 R.id.maps -> {
-                    fragmentManager.beginTransaction()
-                        .hide(active).show(mapsFragment).commit()
-                    active = mapsFragment
+                    activeFragment = switchFragment(mapsFragment, activeFragment)
                     true
                 }
                 R.id.controller -> {
-                    fragmentManager.beginTransaction()
-                        .hide(active).show(controllerFragment).commit()
-                    active = controllerFragment
+                    activeFragment = switchFragment(controllerFragment, activeFragment)
+                    true
+                }
+                R.id.settings -> {
+                    activeFragment = switchFragment(settingsFragment, activeFragment)
                     true
                 }
                 else -> false
             }
         }
+    }
+
+    private fun switchFragment(fragment: Fragment, active: Fragment): Fragment {
+        if (active == fragment) return fragment
+
+        supportFragmentManager.beginTransaction()
+            .hide(active).show(fragment)
+            .commit()
+
+        return fragment
     }
 }
 

@@ -7,4 +7,8 @@
     <string name="label_rv_charts">Send Charts</string>
     <string name="label_rv_markers">My Markers</string>
     <string name="lg_connect">LG Connect</string>
+    <string name="search">Search for a place</string>
+    <string name="card_search_title">View location on Liquid Galaxy</string>
+    <string name="card_search_subtitle">Enter the name of the location you want to view on Liquid Galaxy</string>
+    <string name="settings">Settings</string>
 </resources>

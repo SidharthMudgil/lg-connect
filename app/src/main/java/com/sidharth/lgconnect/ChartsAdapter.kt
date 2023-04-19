@@ -1,4 +1,44 @@
 package com.sidharth.lgconnect
 
-class ChartsAdapter {
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.sidharth.lgconnect.databinding.ItemCardChartBinding
+
+class ChartsAdapter(
+    private val context: Context,
+    private val charts: List<Chart>,
+    private val resourceProvider: ResourceProvider
+) :
+    RecyclerView.Adapter<ChartsAdapter.ChartHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChartHolder {
+        val binding = ItemCardChartBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent, false
+        )
+
+        return ChartHolder(binding)
+    }
+
+    override fun getItemCount(): Int {
+        return charts.size
+    }
+
+    override fun onBindViewHolder(holder: ChartHolder, position: Int) {
+        holder.bind(charts[position], resourceProvider)
+    }
+
+    class ChartHolder(private val itemBinding: ItemCardChartBinding) :
+        RecyclerView.ViewHolder(itemBinding.root) {
+        fun bind(chart: Chart, resourceProvider: ResourceProvider) {
+            itemBinding.ivChartCover.setImageDrawable(
+                resourceProvider.getDrawable(chart.cover)
+            )
+
+            itemBinding.mcvChartCard.setOnClickListener {
+
+            }
+        }
+    }
 }

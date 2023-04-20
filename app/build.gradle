@@ -52,4 +52,6 @@ dependencies {
 
     implementation 'androidx.core:core-splashscreen:1.0.0'
     implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'jp.wasabeef:richeditor-android:2.0.0'
+    implementation 'com.github.ibrahimsn98:android-particles:2.0'
 }

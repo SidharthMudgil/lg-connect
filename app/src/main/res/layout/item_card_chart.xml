@@ -5,17 +5,18 @@
     android:layout_width="100dp"
     android:layout_height="100dp"
     android:layout_marginEnd="10dp"
-    app:cardBackgroundColor="@color/grey_900"
+    app:cardBackgroundColor="@color/grey_800"
     app:cardCornerRadius="15dp"
     app:cardElevation="0dp">
 
     <ImageView
         android:id="@+id/iv_chart_cover"
+        android:padding="@dimen/card_cover_padding"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:src="@drawable/ic_line_chart"
-        app:tint="@color/pale_blue" />
+        app:tint="@color/grey_300" />
 
 
 </com.google.android.material.card.MaterialCardView>

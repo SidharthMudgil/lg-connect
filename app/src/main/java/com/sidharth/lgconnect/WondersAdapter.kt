@@ -36,6 +36,10 @@ class WondersAdapter(
             itemBinding.ivWonderCover.setImageDrawable(
                 resourceProvider.getDrawable(wonder.cover)
             )
+
+            itemBinding.mcvWonderCard.setOnClickListener {
+
+            }
         }
     }
 }

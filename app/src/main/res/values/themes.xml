@@ -21,4 +21,24 @@
         <item name="windowSplashScreenBackground">@color/grey_700</item>
         <item name="postSplashScreenTheme">@style/Theme.LGConnect</item>
     </style>
+
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_layout_stroke</item>
+        <item name="startIconTint">@color/text_input_layout_start_icon</item>
+        <item name="endIconTint">@color/text_input_layout_start_icon</item>
+        <item name="hintTextColor">@color/pale_blue</item>
+        <item name="boxCornerRadiusTopStart">30dp</item>
+        <item name="boxCornerRadiusTopEnd">30dp</item>
+        <item name="boxCornerRadiusBottomStart">30dp</item>
+        <item name="boxCornerRadiusBottomEnd">30dp</item>
+        <item name="android:textColorHint">@color/grey_400</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+    </style>
+
+    <style name="TextInputEditTextStyle">
+        <item name="android:textColor">@color/grey_100</item>
+        <item name="android:textColorHint">@color/grey_400</item>
+    </style>
+
 </resources>

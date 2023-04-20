@@ -22,7 +22,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center|start"
             android:layout_margin="10dp"
-            app:cardBackgroundColor="@color/pale_blue"
+            app:cardBackgroundColor="@color/grey_300"
             app:cardCornerRadius="50dp">
 
             <ImageView
@@ -53,8 +53,9 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/grey_300"
+                android:textSize="16sp"
                 tools:text="Aesop Silver Lake" />
 
             <TextView
@@ -64,8 +65,8 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="2"
-                android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textColor="@color/grey_300"
+                android:textSize="14sp"
                 tools:text="3515 Sunest Boulevard, Los Angeles CA 90026 my name is sidharth mudgil hi " />
 
         </LinearLayout>

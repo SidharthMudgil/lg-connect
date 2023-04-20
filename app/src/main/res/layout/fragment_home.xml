@@ -8,62 +8,84 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lg_connect"
-            android:textColor="@color/pale_blue"
-            android:textSize="48sp" />
+        android:orientation="vertical">
 
         <include layout="@layout/card_search" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/home_side_margin"
+            android:layout_marginEnd="@dimen/home_side_margin"
+            android:layout_marginBottom="@dimen/home_bottom_margin_small"
             android:labelFor="@id/rv_wonders"
             android:text="@string/label_rv_wonders"
-            android:textColor="@color/soft_green"
-            android:textSize="28sp" />
+            android:textColor="@color/grey_300"
+            android:textSize="@dimen/home_title_text_size"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_wonders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/home_bottom_margin_large"
+            android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingStart="@dimen/home_side_margin"
+            android:paddingEnd="@dimen/home_side_margin"
             tools:itemCount="1"
             tools:listitem="@layout/item_card_wonder" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/home_side_margin"
+            android:layout_marginEnd="@dimen/home_side_margin"
+            android:layout_marginBottom="@dimen/home_bottom_margin_small"
             android:labelFor="@id/rv_charts"
             android:text="@string/label_rv_charts"
-            android:textColor="@color/pale_blue"
-            android:textSize="28sp" />
+            android:textColor="@color/grey_300"
+            android:textSize="@dimen/home_title_text_size"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_charts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/home_bottom_margin_large"
+            android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingStart="@dimen/home_side_margin"
+            android:paddingEnd="@dimen/home_side_margin"
             tools:itemCount="1"
             tools:listitem="@layout/item_card_chart" />
+
+        <jp.wasabeef.richeditor.RichEditor
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="@dimen/home_side_margin"
+            android:layout_marginEnd="@dimen/home_side_margin"
+            android:layout_marginBottom="@dimen/home_bottom_margin_small"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/home_side_margin"
+            android:layout_marginEnd="@dimen/home_side_margin"
+            android:layout_marginBottom="@dimen/home_bottom_margin_small"
             android:labelFor="@id/rv_markers"
             android:text="@string/label_rv_markers"
-            android:textColor="@color/pale_blue"
-            android:textSize="28sp" />
+            android:textColor="@color/grey_300"
+            android:textSize="@dimen/home_title_text_size"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_markers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/home_side_margin"
+            android:layout_marginEnd="@dimen/home_side_margin"
             android:orientation="vertical"
             tools:listitem="@layout/item_card_marker" />
 

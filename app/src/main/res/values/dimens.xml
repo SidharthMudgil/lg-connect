@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- fragment_home -->
+    <dimen name="card_cover_padding">15dp</dimen>
+    <dimen name="home_side_margin">10dp</dimen>
+    <dimen name="home_bottom_margin_small">10dp</dimen>
+    <dimen name="home_bottom_margin_large">15dp</dimen>
+    <dimen name="home_title_text_size">18sp</dimen>
+
+    <!--  fragment_controller -->
+    <dimen name="controller_card_text_size">18sp</dimen>
+    <dimen name="controller_card_icon_size">28dp</dimen>
+    <dimen name="controller_card_radius">30dp</dimen>
+    <dimen name="controller_card_side_margin">10dp</dimen>
+    <dimen name="controller_card_bottom_margin">20dp</dimen>
+    <dimen name="settings_input_margin_bottom">20dp</dimen>
+</resources>

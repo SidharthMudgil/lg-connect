@@ -6,9 +6,24 @@
     <string name="label_rv_wonders">Visit 7 Wonders</string>
     <string name="label_rv_charts">Send Charts</string>
     <string name="label_rv_markers">My Markers</string>
-    <string name="lg_connect">LG Connect</string>
+    <string name="lg_connect"><font color="#FFE1F5FE"><b>LG</b></font>Connect</string>
     <string name="search">Search for a place</string>
     <string name="card_search_title">View location on Liquid Galaxy</string>
     <string name="card_search_subtitle">Enter the name of the location you want to view on Liquid Galaxy</string>
     <string name="settings">Settings</string>
+    <string name="reboot">Reboot</string>
+    <string name="power_off">Power off</string>
+    <string name="set_slave_refresh">Set slave refresh</string>
+    <string name="reset_slave_refresh">Reset slave refresh</string>
+    <string name="clear_kml">Clear KML</string>
+    <string name="relaunch">Relaunch</string>
+    <string name="control_your_system">Control your system</string>
+    <string name="disconnected">Connected</string>
+    <string name="connected">Disconnected</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="ip">IP</string>
+    <string name="port">Port</string>
+    <string name="establish_connection_to_the_system">Establish connection to the system</string>
+    <string name="connect">Connect</string>
 </resources>

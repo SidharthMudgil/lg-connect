@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
                 resourceProvider = resourceProvider
             )
         }
+        LinearSnapHelper().attachToRecyclerView(binding.rvCharts)
 
         binding.rvWonders.layoutManager = LinearLayoutManager(
             context, LinearLayoutManager.HORIZONTAL, false
@@ -42,6 +44,7 @@ class HomeFragment : Fragment() {
                 resourceProvider = resourceProvider
             )
         }
+        LinearSnapHelper().attachToRecyclerView(binding.rvWonders)
 
         binding.rvMarkers.layoutManager = LinearLayoutManager(
             context, LinearLayoutManager.VERTICAL, false
@@ -53,6 +56,7 @@ class HomeFragment : Fragment() {
                 resourceProvider = resourceProvider
             )
         }
+        LinearSnapHelper().attachToRecyclerView(binding.rvMarkers)
 
         return binding.root
     }

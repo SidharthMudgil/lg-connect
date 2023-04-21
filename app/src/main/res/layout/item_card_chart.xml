@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:src="@drawable/ic_line_chart"
-        app:tint="@color/grey_300" />
+        app:tint="@color/pale_blue" />
 
 
 </com.google.android.material.card.MaterialCardView>

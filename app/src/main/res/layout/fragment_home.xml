@@ -20,7 +20,7 @@
             android:layout_marginBottom="@dimen/home_bottom_margin_small"
             android:labelFor="@id/rv_wonders"
             android:text="@string/label_rv_wonders"
-            android:textColor="@color/grey_300"
+            android:textColor="@color/grey_100"
             android:textSize="@dimen/home_title_text_size"
             android:textStyle="bold" />
 
@@ -44,7 +44,7 @@
             android:layout_marginBottom="@dimen/home_bottom_margin_small"
             android:labelFor="@id/rv_charts"
             android:text="@string/label_rv_charts"
-            android:textColor="@color/grey_300"
+            android:textColor="@color/grey_100"
             android:textSize="@dimen/home_title_text_size"
             android:textStyle="bold" />
 
@@ -76,16 +76,17 @@
             android:layout_marginBottom="@dimen/home_bottom_margin_small"
             android:labelFor="@id/rv_markers"
             android:text="@string/label_rv_markers"
-            android:textColor="@color/grey_300"
+            android:textColor="@color/grey_100"
             android:textSize="@dimen/home_title_text_size"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_markers"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/home_side_margin"
             android:layout_marginEnd="@dimen/home_side_margin"
+            android:minHeight="400dp"
             android:orientation="vertical"
             tools:listitem="@layout/item_card_marker" />
 

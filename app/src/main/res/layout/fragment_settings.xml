@@ -69,10 +69,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/settings_input_margin_bottom"
                 android:hint="@string/username"
+                android:labelFor="@id/et_username"
                 app:boxBackgroundMode="outline"
                 app:startIconDrawable="@drawable/ic_user">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_username"
                     style="@style/TextInputEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,10 +89,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/settings_input_margin_bottom"
                 android:hint="@string/password"
+                android:labelFor="@id/et_password"
                 app:endIconMode="password_toggle"
                 app:startIconDrawable="@drawable/ic_password">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_password"
                     style="@style/TextInputEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -105,9 +109,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/settings_input_margin_bottom"
                 android:hint="@string/ip"
+                android:labelFor="@id/et_ip"
                 app:startIconDrawable="@drawable/ic_ip">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_ip"
                     style="@style/TextInputEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -121,9 +127,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/port"
+                android:labelFor="@id/til_port"
                 app:startIconDrawable="@drawable/ic_port">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_port"
                     style="@style/TextInputEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

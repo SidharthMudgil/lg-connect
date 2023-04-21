@@ -60,13 +60,15 @@
             tools:itemCount="1"
             tools:listitem="@layout/item_card_chart" />
 
-        <jp.wasabeef.richeditor.RichEditor
+        <com.amrdeveloper.codeview.CodeView
+            android:id="@+id/codeView"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginStart="@dimen/home_side_margin"
-            android:layout_marginEnd="@dimen/home_side_margin"
-            android:layout_marginBottom="@dimen/home_bottom_margin_small"
-            android:visibility="gone" />
+            android:layout_height="500dp"
+            android:background="@color/grey_800"
+            android:dropDownWidth="150dp"
+            android:dropDownHorizontalOffset="0dp"
+            android:dropDownSelector="@color/grey_900"
+            android:gravity="top|start" />
 
         <TextView
             android:layout_width="wrap_content"

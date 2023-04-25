@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.sidharth.lgconnect.domain.model.Planet
 import com.sidharth.lgconnect.databinding.ItemCardPlanetBinding
 import com.sidharth.lgconnect.util.ResourceProvider
+import com.sidharth.lgconnect.util.ToastUtils
 
 class PlanetAdapter(
     private val context: Context,
@@ -29,18 +30,23 @@ class PlanetAdapter(
     }
 
     override fun onBindViewHolder(holder: PlanetHolder, position: Int) {
-        holder.bind(planets[position], resourceProvider)
+        holder.bind(context, planets[position], resourceProvider)
     }
 
     class PlanetHolder(private val itemBinding: ItemCardPlanetBinding) :
         ViewHolder(itemBinding.root) {
-        fun bind(planet: Planet, resourceProvider: ResourceProvider) {
+        fun bind(context: Context,planet: Planet, resourceProvider: ResourceProvider) {
             itemBinding.ivPlanetCover.setImageDrawable(
                 resourceProvider.getDrawable(planet.cover)
             )
 
             itemBinding.mcvPlanetCard.setOnClickListener {
 
+            }
+
+            itemBinding.mcvPlanetCard.setOnLongClickListener {
+                ToastUtils.showToast(context, planet.name)
+                true
             }
         }
     }

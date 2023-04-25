@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.databinding.ItemCardMarkerBinding
 import com.sidharth.lgconnect.util.ResourceProvider
+import com.sidharth.lgconnect.util.ToastUtils
 
 class MarkersAdapter(
     private val context: Context,
@@ -27,12 +28,12 @@ class MarkersAdapter(
     }
 
     override fun onBindViewHolder(holder: MarkerHolder, position: Int) {
-        holder.bind(markers[position], resourceProvider)
+        holder.bind(context, markers[position], resourceProvider)
     }
 
     class MarkerHolder(private val itemBinding: ItemCardMarkerBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(marker: Marker, resourceProvider: ResourceProvider) {
+        fun bind(context: Context, marker: Marker, resourceProvider: ResourceProvider) {
             itemBinding.sivMarkerIcon.setImageDrawable(
                 resourceProvider.getDrawable(marker.icon)
             )
@@ -42,6 +43,11 @@ class MarkersAdapter(
 
             itemBinding.mcvMarkerCard.setOnClickListener {
 
+            }
+
+            itemBinding.mcvMarkerCard.setOnLongClickListener {
+                ToastUtils.showToast(context, marker.title)
+                true
             }
         }
     }

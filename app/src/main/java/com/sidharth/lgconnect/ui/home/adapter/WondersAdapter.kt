@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.sidharth.lgconnect.domain.model.Wonder
 import com.sidharth.lgconnect.databinding.ItemCardWonderBinding
 import com.sidharth.lgconnect.util.ResourceProvider
+import com.sidharth.lgconnect.util.ToastUtils
 
 class WondersAdapter(
     private val context: Context,
@@ -28,19 +29,24 @@ class WondersAdapter(
     }
 
     override fun onBindViewHolder(holder: WonderHolder, position: Int) {
-        holder.bind(wonders[position], resourceProvider)
+        holder.bind(context, wonders[position], resourceProvider)
     }
 
     class WonderHolder(private val itemBinding: ItemCardWonderBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
-        fun bind(wonder: Wonder, resourceProvider: ResourceProvider) {
+        fun bind(context: Context, wonder: Wonder, resourceProvider: ResourceProvider) {
             itemBinding.ivWonderCover.setImageDrawable(
                 resourceProvider.getDrawable(wonder.cover)
             )
 
             itemBinding.mcvWonderCard.setOnClickListener {
 
+            }
+
+            itemBinding.mcvWonderCard.setOnLongClickListener {
+                ToastUtils.showToast(context, wonder.title)
+                true
             }
         }
     }

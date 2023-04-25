@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.databinding.ItemCardChartBinding
 import com.sidharth.lgconnect.util.ResourceProvider
+import com.sidharth.lgconnect.util.ToastUtils
 
 class ChartsAdapter(
     private val context: Context,
@@ -28,18 +29,23 @@ class ChartsAdapter(
     }
 
     override fun onBindViewHolder(holder: ChartHolder, position: Int) {
-        holder.bind(charts[position], resourceProvider)
+        holder.bind(context, charts[position], resourceProvider)
     }
 
     class ChartHolder(private val itemBinding: ItemCardChartBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(chart: Chart, resourceProvider: ResourceProvider) {
+        fun bind(context: Context, chart: Chart, resourceProvider: ResourceProvider) {
             itemBinding.ivChartCover.setImageDrawable(
                 resourceProvider.getDrawable(chart.cover)
             )
 
             itemBinding.mcvChartCard.setOnClickListener {
 
+            }
+
+            itemBinding.mcvChartCard.setOnLongClickListener {
+                ToastUtils.showToast(context, chart.type)
+                true
             }
         }
     }

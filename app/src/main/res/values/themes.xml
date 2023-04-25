@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/grey_900</item>
         <item name="android:windowBackground">@color/grey_700</item>
+
+        <item name="fontFamily">@font/source_sans</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">

@@ -10,6 +10,7 @@ import com.sidharth.lgconnect.ui.codeeditor.CodeEditorFragment
 import com.sidharth.lgconnect.ui.controller.ControllerFragment
 import com.sidharth.lgconnect.ui.home.HomeFragment
 import com.sidharth.lgconnect.ui.maps.MapsFragment
+import com.sidharth.lgconnect.ui.settings.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

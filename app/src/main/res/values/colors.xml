@@ -13,4 +13,14 @@
     <color name="lime_green">#FFC3D8B7</color>
     <color name="pale_blue">#FFE1F5FE</color>
     <color name="soft_green">#FFD4E6A3</color>
+
+    <!-- xml colors -->
+    <color name="xml_tags">#FFB2CCD6</color>
+    <color name="xml_comment">#FF6A737D</color>
+    <color name="xml_attribute">#FFE5C07B</color>
+    <color name="xml_operation">#FFCC7832</color>
+    <color name="xml_numbers">#FFB5CEA8</color>
+    <color name="xml_char">#FFA8DBA8</color>
+    <color name="xml_string">#FFA8DBA8</color>
+
 </resources>

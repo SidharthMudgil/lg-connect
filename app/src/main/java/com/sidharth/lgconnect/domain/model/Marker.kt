@@ -1,7 +1,8 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.domain.model
 
 import android.graphics.Color
 import com.google.android.gms.maps.model.LatLng
+import com.sidharth.lgconnect.R
 
 data class Marker(
     val title: String,

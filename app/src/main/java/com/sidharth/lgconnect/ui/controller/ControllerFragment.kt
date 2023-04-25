@@ -1,10 +1,11 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.ui.controller
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sidharth.lgconnect.R
 
 
 class ControllerFragment : Fragment() {

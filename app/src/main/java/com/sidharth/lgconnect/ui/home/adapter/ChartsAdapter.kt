@@ -1,10 +1,12 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.ui.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.databinding.ItemCardChartBinding
+import com.sidharth.lgconnect.util.ResourceProvider
 
 class ChartsAdapter(
     private val context: Context,

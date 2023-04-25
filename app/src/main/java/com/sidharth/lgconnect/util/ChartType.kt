@@ -1,4 +1,4 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.util
 
 enum class ChartType(
     val type: String,

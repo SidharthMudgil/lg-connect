@@ -1,8 +1,27 @@
 package com.sidharth.lgconnect
 
 import com.google.android.gms.maps.model.LatLng
+import com.sidharth.lgconnect.domain.model.Chart
+import com.sidharth.lgconnect.domain.model.Marker
+import com.sidharth.lgconnect.domain.model.Planet
+import com.sidharth.lgconnect.domain.model.Wonder
+import com.sidharth.lgconnect.util.ChartType
 
 object DummyData {
+    val planets: List<Planet> = listOf(
+        Planet(
+            cover = R.drawable.ic_earth,
+            name = "earth",
+        ),
+        Planet(
+            cover = R.drawable.ic_moon,
+            name = "moon",
+        ),
+        Planet(
+            cover = R.drawable.ic_mars,
+            name = "mars",
+        ),
+    )
 
     val wonders: List<Wonder> = listOf(
         Wonder(

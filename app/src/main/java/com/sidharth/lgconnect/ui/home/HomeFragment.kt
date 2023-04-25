@@ -1,4 +1,4 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import com.sidharth.lgconnect.DummyData
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
+import com.sidharth.lgconnect.ui.home.adapter.ChartsAdapter
+import com.sidharth.lgconnect.ui.home.adapter.MarkersAdapter
+import com.sidharth.lgconnect.ui.home.adapter.PlanetAdapter
+import com.sidharth.lgconnect.ui.home.adapter.WondersAdapter
+import com.sidharth.lgconnect.util.ResourceProvider
 
 class HomeFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
@@ -21,6 +27,18 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding: FragmentHomeBinding = FragmentHomeBinding.inflate(inflater)
+
+        binding.rvPlanets.layoutManager = LinearLayoutManager(
+            context, LinearLayoutManager.HORIZONTAL, false
+        )
+        binding.rvPlanets.adapter = context?.let {
+            PlanetAdapter(
+                context = it,
+                planets = DummyData.planets,
+                resourceProvider = resourceProvider
+            )
+        }
+        LinearSnapHelper().attachToRecyclerView(binding.rvPlanets)
 
         binding.rvCharts.layoutManager = LinearLayoutManager(
             context, LinearLayoutManager.HORIZONTAL, false

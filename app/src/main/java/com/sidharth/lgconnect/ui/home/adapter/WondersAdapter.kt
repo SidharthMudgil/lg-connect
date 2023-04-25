@@ -1,11 +1,13 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.ui.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.sidharth.lgconnect.domain.model.Wonder
 import com.sidharth.lgconnect.databinding.ItemCardWonderBinding
+import com.sidharth.lgconnect.util.ResourceProvider
 
 class WondersAdapter(
     private val context: Context,

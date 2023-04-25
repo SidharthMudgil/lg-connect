@@ -1,4 +1,4 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.ui.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater

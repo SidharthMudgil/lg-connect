@@ -1,10 +1,12 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.ui.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.databinding.ItemCardMarkerBinding
+import com.sidharth.lgconnect.util.ResourceProvider
 
 class MarkersAdapter(
     private val context: Context,

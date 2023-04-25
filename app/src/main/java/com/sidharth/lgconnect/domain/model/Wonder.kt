@@ -1,4 +1,4 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.domain.model
 
 import androidx.annotation.DrawableRes
 import com.google.android.gms.maps.model.LatLng

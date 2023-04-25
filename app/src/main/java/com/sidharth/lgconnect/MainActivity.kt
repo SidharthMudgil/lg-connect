@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import com.sidharth.lgconnect.databinding.ActivityMainBinding
+import com.sidharth.lgconnect.ui.codeeditor.CodeEditorFragment
+import com.sidharth.lgconnect.ui.controller.ControllerFragment
+import com.sidharth.lgconnect.ui.home.HomeFragment
+import com.sidharth.lgconnect.ui.maps.MapsFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -18,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val homeFragment: Fragment = HomeFragment()
+        val codeEditorFragment: Fragment = CodeEditorFragment()
         val mapsFragment: Fragment = MapsFragment()
         val controllerFragment: Fragment = ControllerFragment()
         val settingsFragment: Fragment = SettingsFragment()
@@ -26,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, homeFragment, "home").hide(homeFragment)
+            .add(R.id.fragment_container, codeEditorFragment, "code-editor")
+            .hide(codeEditorFragment)
             .add(R.id.fragment_container, mapsFragment, "maps").hide(mapsFragment)
             .add(R.id.fragment_container, controllerFragment, "controller").hide(controllerFragment)
             .add(R.id.fragment_container, settingsFragment, "settings").hide(settingsFragment)
@@ -37,18 +44,27 @@ class MainActivity : AppCompatActivity() {
                     activeFragment = switchFragment(homeFragment, activeFragment)
                     true
                 }
+
+                R.id.code_editor -> {
+                    activeFragment = switchFragment(codeEditorFragment, activeFragment)
+                    true
+                }
+
                 R.id.maps -> {
                     activeFragment = switchFragment(mapsFragment, activeFragment)
                     true
                 }
+
                 R.id.controller -> {
                     activeFragment = switchFragment(controllerFragment, activeFragment)
                     true
                 }
+
                 R.id.settings -> {
                     activeFragment = switchFragment(settingsFragment, activeFragment)
                     true
                 }
+
                 else -> false
             }
         }

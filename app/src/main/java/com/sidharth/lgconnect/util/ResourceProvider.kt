@@ -1,4 +1,4 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.util
 
 import android.annotation.SuppressLint
 import android.content.Context

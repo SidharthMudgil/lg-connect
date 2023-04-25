@@ -7,6 +7,12 @@
         android:title="@string/home" />
 
     <item
+        android:id="@+id/code_editor"
+        android:enabled="true"
+        android:icon="@drawable/ic_code_block"
+        android:title="@string/code_editor" />
+
+    <item
         android:id="@+id/maps"
         android:enabled="true"
         android:icon="@drawable/ic_maps"

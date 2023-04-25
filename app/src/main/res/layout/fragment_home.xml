@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,6 +11,30 @@
         android:orientation="vertical">
 
         <include layout="@layout/card_search" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/home_side_margin"
+            android:layout_marginEnd="@dimen/home_side_margin"
+            android:layout_marginBottom="@dimen/home_bottom_margin_small"
+            android:labelFor="@id/rv_charts"
+            android:text="@string/change_planet"
+            android:textColor="@color/grey_100"
+            android:textSize="@dimen/home_title_text_size"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_planets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/home_bottom_margin_large"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/home_side_margin"
+            android:paddingEnd="@dimen/home_side_margin"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_card_planet" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,16 +83,6 @@
             android:paddingEnd="@dimen/home_side_margin"
             tools:itemCount="1"
             tools:listitem="@layout/item_card_chart" />
-
-        <com.amrdeveloper.codeview.CodeView
-            android:id="@+id/codeView"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:background="@color/grey_800"
-            android:dropDownWidth="150dp"
-            android:dropDownHorizontalOffset="0dp"
-            android:dropDownSelector="@color/grey_900"
-            android:gravity="top|start" />
 
         <TextView
             android:layout_width="wrap_content"

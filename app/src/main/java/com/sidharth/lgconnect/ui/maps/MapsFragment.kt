@@ -1,4 +1,4 @@
-package com.sidharth.lgconnect
+package com.sidharth.lgconnect.ui.maps
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,13 +10,15 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-
+import com.sidharth.lgconnect.R
 
 
 class MapsFragment : Fragment() {
 
     private val callback = OnMapReadyCallback { googleMap ->
-        googleMap.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it, R.raw.map_style_dark) })
+        googleMap.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it,
+            R.raw.map_style_dark
+        ) })
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(21.51, 81.23), 1f))
     }
 

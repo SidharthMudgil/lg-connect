@@ -1,6 +1,9 @@
 package com.sidharth.lgconnect.ui.maps
 
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,22 +13,50 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.sidharth.lgconnect.R
+import com.sidharth.lgconnect.data.mapper.MarkerMapper
+import com.sidharth.lgconnect.util.ToastUtils
 
 
 class MapsFragment : Fragment() {
 
     private val callback = OnMapReadyCallback { googleMap ->
-        googleMap.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it,
-            R.raw.map_style_dark
-        ) })
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(21.51, 81.23), 1f))
+        googleMap.setMapStyle(context?.let {
+            MapStyleOptions.loadRawResourceStyle(
+                it, R.raw.map_style_dark
+            )
+        })
+
+        googleMap.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(21.51, 81.23), 1f
+            )
+        )
+
+        val vibrator = context?.getSystemService(Vibrator::class.java)
+
+        googleMap.setOnMapLongClickListener { latLng ->
+            context?.let { ctx ->
+                val marker = MarkerMapper(ctx).mapAddressToMarker(latLng.latitude, latLng.longitude)
+
+                marker?.let { mkr ->
+                    vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
+
+                    ToastUtils.showToast(ctx, mkr.title)
+                    Log.d("marker_title", mkr.title)
+                    Log.d("marker_subtitle", mkr.subtitle)
+
+                    googleMap.addMarker(
+                        MarkerOptions().position(latLng)
+                    )
+                }
+            }
+        }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }

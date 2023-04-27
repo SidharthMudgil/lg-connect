@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/send_kml"
+        android:textStyle="bold"
         app:icon="@drawable/ic_send_kml"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

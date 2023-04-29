@@ -14,6 +14,9 @@ class SSHService(
 ) {
     private val ssh = SSHClient()
 
+    val user: String get() = username
+    val passwordOrKey: String get() = password
+
     init {
         val hostKeyVerifier = object : HostKeyVerifier {
             override fun verify(hostname: String?, port: Int, key: PublicKey?): Boolean {
@@ -37,7 +40,7 @@ class SSHService(
         ssh.disconnect()
     }
 
-    fun executeCommand(command: String): List<String> {
+    fun execute(command: String): List<String> {
         val session: Session = ssh.startSession()
         val output: MutableList<String> = ArrayList()
         try {
@@ -56,7 +59,7 @@ class SSHService(
         return output
     }
 
-    fun uploadFile(data: String, remotePath: String): Boolean {
+    fun upload(data: String, remotePath: String): Boolean {
         val sftp = ssh.newSFTPClient()
         return try {
             sftp.put(data, remotePath)

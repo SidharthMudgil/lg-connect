@@ -1,3 +1,9 @@
+package com.sidharth.lgconnect.service
+
+import android.text.InputType
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.schmizz.sshj.SSHClient
 import net.schmizz.sshj.connection.ConnectionException
 import net.schmizz.sshj.connection.channel.direct.Session
@@ -17,6 +23,8 @@ class SSHService(
     val user: String get() = username
     val passwordOrKey: String get() = password
 
+    val isConnected: Boolean get() = ssh.isConnected
+
     init {
         val hostKeyVerifier = object : HostKeyVerifier {
             override fun verify(hostname: String?, port: Int, key: PublicKey?): Boolean {
@@ -31,44 +39,95 @@ class SSHService(
         ssh.addHostKeyVerifier(hostKeyVerifier)
     }
 
-    fun connect() {
-        ssh.connect(hostname, port)
-        ssh.authPassword(username, password)
+    suspend fun connect(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                ssh.connect(hostname, port)
+                ssh.authPassword(username, password)
+                true
+            } catch (e: ConnectionException) {
+                e.printStackTrace()
+                false
+            }
+        }
     }
 
-    fun disconnect() {
-        ssh.disconnect()
+    suspend fun disconnect(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                ssh.disconnect()
+                true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
+        }
     }
 
-    fun execute(command: String): List<String> {
-        val session: Session = ssh.startSession()
-        val output: MutableList<String> = ArrayList()
-        try {
-            session.exec(command).use { cmd ->
-                cmd.inputStream.reader().useLines { lines ->
-                    lines.forEach { line -> output.add(line) }
+    suspend fun execute(command: String): List<String> {
+        return withContext(Dispatchers.IO) {
+            val session: Session = ssh.startSession()
+            val output: MutableList<String> = ArrayList()
+            try {
+                session.exec(command).use { cmd ->
+                    cmd.inputStream.reader().useLines { lines ->
+                        lines.forEach { line -> output.add(line) }
+                    }
+                }
+            } catch (e: ConnectionException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } finally {
+                session.close()
+            }
+            output
+        }
+    }
+
+    suspend fun upload(data: String, remotePath: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val sftp = ssh.newSFTPClient()
+            try {
+                sftp.put(data, remotePath)
+                true
+            } catch (e: SFTPException) {
+                e.printStackTrace()
+                false
+            } finally {
+                sftp.close()
+            }
+        }
+    }
+
+    companion object FormValidator {
+        fun validate(fields: List<Pair<TextInputEditText, String>>): Boolean {
+            var hasError = false
+            fields.forEach { (field, errorMessage) ->
+                val value = field.text.toString().trim()
+                if (value.isEmpty()) {
+                    field.error = errorMessage
+                    hasError = true
+                } else {
+                    field.error =
+                        if (field.inputType == InputType.TYPE_CLASS_PHONE && !isValidIpAddress(value)) {
+                            "Invalid IP address"
+                        } else {
+                            null
+                        }
                 }
             }
-        } catch (e: ConnectionException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            session.close()
+            return !hasError
         }
-        return output
-    }
 
-    fun upload(data: String, remotePath: String): Boolean {
-        val sftp = ssh.newSFTPClient()
-        return try {
-            sftp.put(data, remotePath)
-            true
-        } catch (e: SFTPException) {
-            e.printStackTrace()
-            false
-        } finally {
-            sftp.close()
+        private fun isValidIpAddress(ip: String): Boolean {
+            val pattern = Regex(
+                "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
+            )
+            return pattern.matches(ip)
         }
     }
 }

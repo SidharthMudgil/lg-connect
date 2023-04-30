@@ -1,13 +1,16 @@
 package com.sidharth.lgconnect.ui.codeeditor
 
+import com.sidharth.lgconnect.service.LGService
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentCodeEditorBinding
 import com.sidharth.lgconnect.util.ResourceProvider
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class CodeEditorFragment : Fragment() {
@@ -22,10 +25,12 @@ class CodeEditorFragment : Fragment() {
     private val patternString = Pattern.compile("[\"'][^\"']*?[\"']")
 
     private lateinit var resourceProvider: ResourceProvider
+    private lateinit var lgService: LGService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
+//        lgService = com.sidharth.lgconnect.service.LGService()
     }
 
     override fun onCreateView(
@@ -67,7 +72,9 @@ class CodeEditorFragment : Fragment() {
         binding.codeView.setEnableHighlightCurrentLine(true)
 
         binding.fabSendKml.setOnClickListener {
-
+            lifecycleScope.launch {
+                lgService.sendKml(binding.codeView.text.toString())
+            }
         }
 
         return binding.root

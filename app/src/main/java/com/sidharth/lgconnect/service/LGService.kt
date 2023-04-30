@@ -1,10 +1,12 @@
+package com.sidharth.lgconnect.service
+
 class LGService(
     private val sshService: SSHService,
     private val fileService: FileService,
 ) {
     val totalScreens = 5
 
-    fun setRefresh() {
+    suspend fun setRefresh() {
         val search = "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href>";
         val replace =
             "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href><refreshMode>onInterval<\\/refreshMode><refreshInterval>2<\\/refreshInterval>";
@@ -25,7 +27,7 @@ class LGService(
         }
     }
 
-    fun resetRefresh() {
+    suspend fun resetRefresh() {
         val search =
             "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href><refreshMode>onInterval<\\/refreshMode><refreshInterval>2<\\/refreshInterval>"
         val replace = "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href>"
@@ -41,7 +43,7 @@ class LGService(
         reboot()
     }
 
-    fun clearKml() {
+    suspend fun clearKml() {
         val blank = """
             <?xml version="1.0" encoding="UTF-8"?>
             <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -62,45 +64,48 @@ class LGService(
         sshService.execute(query)
     }
 
-    fun relaunch() {
+    suspend fun relaunch() {
         for (i in 1..totalScreens) {
-            val relaunchCommand = """RELAUNCH_CMD="\\
-if [ -f /etc/init/lxdm.conf ]; then
-  export SERVICE=lxdm
-elif [ -f /etc/init/lightdm.conf ]; then
-  export SERVICE=lightdm
-else
-  exit 1
-fi
-if  [[ \\\$(service \\${'$'}SERVICE status) =~ 'stop' ]]; then
-  echo \\${sshService.passwordOrKey} | sudo -S service \\${'$'}{SERVICE} start
-else
-  echo \\${sshService.passwordOrKey} | sudo -S service \\${'$'}{SERVICE} restart
-fi
-" && sshpass -p \\${sshService.passwordOrKey} ssh -x -t lg@lg\$i "\${'$'}RELAUNCH_CMD\"""".trimIndent()
+            val relaunchCommand = """
+            RELAUNCH_CMD="\\
+            if [ -f /etc/init/lxdm.conf ]; then
+              export SERVICE=lxdm
+            elif [ -f /etc/init/lightdm.conf ]; then
+              export SERVICE=lightdm
+            else
+              exit 1
+            fi
+            if  [[ \\\$(service \\${'$'}SERVICE status) =~ 'stop' ]]; then
+              echo \\${sshService.passwordOrKey} | sudo -S service \\${'$'}{SERVICE} start
+            else
+              echo \\${sshService.passwordOrKey} | sudo -S service \\${'$'}{SERVICE} restart
+            fi
+            " && sshpass -p \\${sshService.passwordOrKey} ssh -x -t lg@lg\$i "\${'$'}RELAUNCH_CMD\"
+        """.trimIndent()
 
             sshService.execute("\"/home/${sshService.user}/bin/lg-relaunch\" > /home/${sshService.user}/log.txt")
             sshService.execute(relaunchCommand)
         }
     }
 
-    fun reboot() {
+
+    suspend fun reboot() {
         for (i in 1..totalScreens) {
             sshService.execute("sshpass -p ${sshService.passwordOrKey} ssh -t lg$i \"echo ${sshService.passwordOrKey} | sudo -S reboot\"")
         }
     }
 
-    fun powerOff() {
+    suspend fun powerOff() {
         for (i in 1..totalScreens) {
             sshService.execute("sshpass -p ${sshService.passwordOrKey} ssh -t lg$i \"echo ${sshService.passwordOrKey} | sudo -S poweroff\"")
         }
     }
 
-    fun setLogos() {
+    suspend fun setLogos() {
         // implementation for setLogos
     }
 
-    fun sendKml() {
+    suspend fun sendKml(data: String) {
 
     }
 }

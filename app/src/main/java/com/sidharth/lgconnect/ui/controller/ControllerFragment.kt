@@ -1,22 +1,76 @@
 package com.sidharth.lgconnect.ui.controller
 
+import com.sidharth.lgconnect.service.LGService
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sidharth.lgconnect.R
+import androidx.lifecycle.lifecycleScope
+import com.sidharth.lgconnect.databinding.FragmentControllerBinding
+import com.sidharth.lgconnect.util.ResourceProvider
+import kotlinx.coroutines.launch
 
 
 class ControllerFragment : Fragment() {
+    private lateinit var resourceProvider: ResourceProvider
+    private lateinit var lgService: LGService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        resourceProvider = ResourceProvider(requireContext())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_controller, container, false)
+    ): View {
+        val binding = FragmentControllerBinding.inflate(inflater)
+
+//        binding.tvConnectionStatus.text =
+//        binding.tvConnectionStatus.setTextColor()
+
+        binding.mcvSetSlaveRefresh.setOnClickListener {
+            lifecycleScope.launch {
+                lgService.setRefresh()
+            }
+        }
+
+        binding.mcvSetSlaveRefresh.setOnClickListener {
+            lifecycleScope.launch {
+                lgService.setRefresh()
+            }
+        }
+
+        binding.mcvResetSlaveRefresh.setOnClickListener {
+            lifecycleScope.launch {
+                lgService.resetRefresh()
+            }
+        }
+
+        binding.mcvClearKml.setOnClickListener {
+            lifecycleScope.launch {
+                lgService.clearKml()
+            }
+        }
+
+        binding.mcvRelaunch.setOnClickListener {
+            lifecycleScope.launch {
+                lgService.relaunch()
+            }
+        }
+
+        binding.mcvReboot.setOnClickListener {
+            lifecycleScope.launch {
+                lgService.reboot()
+            }
+        }
+
+        binding.mcvPowerOff.setOnClickListener {
+            lifecycleScope.launch {
+                lgService.powerOff()
+            }
+        }
+
+        return binding.root
     }
 }

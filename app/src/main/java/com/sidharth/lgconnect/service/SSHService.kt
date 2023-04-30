@@ -45,7 +45,7 @@ class SSHService(
                 ssh.connect(hostname, port)
                 ssh.authPassword(username, password)
                 true
-            } catch (e: ConnectionException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 false
             }

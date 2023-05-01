@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.databinding.ItemCardMarkerBinding
 import com.sidharth.lgconnect.service.ServiceManager
+import com.sidharth.lgconnect.util.LGConnectionDialog
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -50,7 +51,9 @@ class MarkersAdapter(
 
             itemBinding.mcvMarkerCard.setOnClickListener {
                 lifecycleScope.launch {
-                    ServiceManager.getLGService()?.createMarker(marker)
+                    ServiceManager.getLGService()?.createMarker(marker) ?: LGConnectionDialog.show(context) {
+
+                    }
                 }
             }
 

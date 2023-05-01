@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.databinding.ItemCardChartBinding
 import com.sidharth.lgconnect.service.ServiceManager
+import com.sidharth.lgconnect.util.LGConnectionDialog
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -17,12 +18,10 @@ class ChartsAdapter(
     private val charts: List<Chart>,
     private val resourceProvider: ResourceProvider,
     private val lifecycleScope: LifecycleCoroutineScope,
-) :
-    RecyclerView.Adapter<ChartsAdapter.ChartHolder>() {
+) : RecyclerView.Adapter<ChartsAdapter.ChartHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChartHolder {
         val binding = ItemCardChartBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent, false
+            LayoutInflater.from(parent.context), parent, false
         )
 
         return ChartHolder(binding)
@@ -51,6 +50,9 @@ class ChartsAdapter(
             itemBinding.mcvChartCard.setOnClickListener {
                 lifecycleScope.launch {
                     ServiceManager.getLGService()?.createChart(chart.type)
+                        ?: LGConnectionDialog.show(context) {
+
+                        }
                 }
             }
 

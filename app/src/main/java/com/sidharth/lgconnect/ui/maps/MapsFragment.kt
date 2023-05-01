@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.data.mapper.MarkerMapper
-import com.sidharth.lgconnect.util.ToastUtils
 
 
 class MapsFragment : Fragment() {
@@ -47,12 +45,8 @@ class MapsFragment : Fragment() {
                     marker?.let { mkr ->
                         vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
 
-                        ToastUtils.showToast(ctx, mkr.title)
-                        Log.d("marker_title", mkr.title)
-                        Log.d("marker_subtitle", mkr.subtitle)
-
                         googleMap.addMarker(
-                            MarkerOptions().position(latLng)
+                            MarkerOptions().position(latLng).title(mkr.title)
                         )
                     }
                 }

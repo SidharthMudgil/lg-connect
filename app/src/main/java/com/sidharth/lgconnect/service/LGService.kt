@@ -1,5 +1,8 @@
 package com.sidharth.lgconnect.service
 
+import com.google.android.gms.maps.model.LatLng
+import com.sidharth.lgconnect.domain.model.Marker
+
 class LGService(
     private val sshService: SSHService,
     private val fileService: FileService,
@@ -107,5 +110,30 @@ class LGService(
 
     suspend fun sendKml(data: String) {
 
+    }
+
+    suspend fun createChart(type: String) {
+        val kml = KMLService.createChartKML(type)
+    }
+
+    suspend fun changePlanet(name: String) {
+
+    }
+
+    suspend fun createMarker(marker: Marker) {
+        KMLService.createMarker(marker)
+    }
+
+    suspend fun flyTo(latLng: LatLng) {
+
+    }
+
+    private suspend fun orbit(latLng: LatLng) {
+
+    }
+
+    suspend fun flyToAndOrbit(latLng: LatLng) {
+        flyTo(latLng)
+        orbit(latLng)
     }
 }

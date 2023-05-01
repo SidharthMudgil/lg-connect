@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentCodeEditorBinding
+import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -25,12 +26,14 @@ class CodeEditorFragment : Fragment() {
     private val patternString = Pattern.compile("[\"'][^\"']*?[\"']")
 
     private lateinit var resourceProvider: ResourceProvider
-    private lateinit var lgService: LGService
+    private var lgService: LGService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
-//        lgService = com.sidharth.lgconnect.service.LGService()
+        if (ServiceManager.getSSHService()?.isConnected == true) {
+            lgService = ServiceManager.getLGService()
+        }
     }
 
     override fun onCreateView(
@@ -73,10 +76,12 @@ class CodeEditorFragment : Fragment() {
 
         binding.fabSendKml.setOnClickListener {
             lifecycleScope.launch {
-                lgService.sendKml(binding.codeView.text.toString())
+                lgService?.sendKml(binding.codeView.text.toString()) ?: doSomething()
             }
         }
 
         return binding.root
     }
+
+    fun doSomething() {}
 }

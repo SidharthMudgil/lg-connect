@@ -10,10 +10,11 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class FileService(private val context: Context) {
+class FileService(context: Context) {
+    private val applicationContext = context.applicationContext
 
     private fun getKmlDir(): File {
-        val dir = File(context.getExternalFilesDir(null), "KML")
+        val dir = File(applicationContext.getExternalFilesDir(null), "KML")
         if (!dir.exists()) dir.mkdir()
         return dir
     }
@@ -41,7 +42,7 @@ class FileService(private val context: Context) {
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888
                 val bitmap = BitmapFactory.decodeFile(path, options)
                 val file1 =
-                    File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "$name.jpg")
+                    File(applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "$name.jpg")
                 val fos = FileOutputStream(file1)
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)
                 fos.close()

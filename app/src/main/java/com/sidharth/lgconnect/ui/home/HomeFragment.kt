@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.sidharth.lgconnect.DummyData
@@ -23,8 +24,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val binding: FragmentHomeBinding = FragmentHomeBinding.inflate(inflater)
 
@@ -35,7 +35,8 @@ class HomeFragment : Fragment() {
             PlanetAdapter(
                 context = it,
                 planets = DummyData.planets,
-                resourceProvider = resourceProvider
+                resourceProvider = resourceProvider,
+                lifecycleScope = lifecycleScope
             )
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvPlanets)
@@ -47,7 +48,8 @@ class HomeFragment : Fragment() {
             ChartsAdapter(
                 context = it,
                 charts = DummyData.charts,
-                resourceProvider = resourceProvider
+                resourceProvider = resourceProvider,
+                lifecycleScope = lifecycleScope
             )
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvCharts)
@@ -59,7 +61,8 @@ class HomeFragment : Fragment() {
             WondersAdapter(
                 context = it,
                 wonders = DummyData.wonders,
-                resourceProvider = resourceProvider
+                resourceProvider = resourceProvider,
+                lifecycleScope = lifecycleScope
             )
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvWonders)
@@ -71,7 +74,8 @@ class HomeFragment : Fragment() {
             MarkersAdapter(
                 context = it,
                 markers = DummyData.markers,
-                resourceProvider = resourceProvider
+                resourceProvider = resourceProvider,
+                lifecycleScope = lifecycleScope
             )
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvMarkers)

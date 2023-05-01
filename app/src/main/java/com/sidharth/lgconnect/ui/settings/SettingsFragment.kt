@@ -9,6 +9,8 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.databinding.FragmentSettingsBinding
+import com.sidharth.lgconnect.domain.model.SSHConfig
+import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.util.KeyboardUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
@@ -27,8 +29,7 @@ class SettingsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val binding = FragmentSettingsBinding.inflate(inflater)
 
@@ -97,7 +98,7 @@ class SettingsFragment : Fragment() {
         )
 
         if (SSHService.validate(fields)) {
-            val sshService = SSHService(
+            val config = SSHConfig(
                 username = binding.etUsername.text.toString().trim(),
                 password = binding.etPassword.text.toString(),
                 hostname = binding.etIp.text.toString().trim(),
@@ -105,7 +106,11 @@ class SettingsFragment : Fragment() {
             )
 
             lifecycleScope.launch {
-                sshService.connect()
+                context?.let {
+                    ServiceManager.initialize(context = it, sshConfig = config)
+                }
+
+                ServiceManager.getSSHService()?.connect() ?: {}
             }
         }
     }

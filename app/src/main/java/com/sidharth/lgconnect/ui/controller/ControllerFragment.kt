@@ -8,16 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.databinding.FragmentControllerBinding
+import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
 
 
 class ControllerFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
-    private lateinit var lgService: LGService
+    private var lgService: LGService? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
+        if (ServiceManager.getSSHService()?.isConnected == true) {
+            lgService = ServiceManager.getLGService()
+        }
     }
 
     override fun onCreateView(
@@ -31,46 +35,48 @@ class ControllerFragment : Fragment() {
 
         binding.mcvSetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
-                lgService.setRefresh()
+                lgService?.setRefresh() ?: doSomething()
             }
         }
 
         binding.mcvSetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
-                lgService.setRefresh()
+                lgService?.setRefresh() ?: doSomething()
             }
         }
 
         binding.mcvResetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
-                lgService.resetRefresh()
+                lgService?.resetRefresh() ?: doSomething()
             }
         }
 
         binding.mcvClearKml.setOnClickListener {
             lifecycleScope.launch {
-                lgService.clearKml()
+                lgService?.clearKml() ?: doSomething()
             }
         }
 
         binding.mcvRelaunch.setOnClickListener {
             lifecycleScope.launch {
-                lgService.relaunch()
+                lgService?.relaunch() ?: doSomething()
             }
         }
 
         binding.mcvReboot.setOnClickListener {
             lifecycleScope.launch {
-                lgService.reboot()
+                lgService?.reboot() ?: doSomething()
             }
         }
 
         binding.mcvPowerOff.setOnClickListener {
             lifecycleScope.launch {
-                lgService.powerOff()
+                lgService?.powerOff() ?: doSomething()
             }
         }
 
         return binding.root
     }
+
+    fun doSomething() {}
 }

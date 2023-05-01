@@ -2,6 +2,7 @@ package com.sidharth.lgconnect.service
 
 import android.text.InputType
 import com.google.android.material.textfield.TextInputEditText
+import com.sidharth.lgconnect.domain.model.SSHConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.schmizz.sshj.SSHClient
@@ -18,12 +19,25 @@ class SSHService(
     private val username: String,
     private val password: String,
 ) {
+    constructor(
+        config: SSHConfig
+    ) : this(
+        hostname = config.hostname,
+        port = config.port,
+        username = config.username,
+        password = config.password
+    )
+
     private val ssh = SSHClient()
 
     val user: String get() = username
     val passwordOrKey: String get() = password
 
     val isConnected: Boolean get() = ssh.isConnected
+    val config: SSHConfig
+        get() = SSHConfig(
+            hostname = hostname, port = port, username = username, password = password
+        )
 
     init {
         val hostKeyVerifier = object : HostKeyVerifier {
@@ -122,10 +136,7 @@ class SSHService(
 
         private fun isValidIpAddress(ip: String): Boolean {
             val pattern = Regex(
-                "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
+                "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
             )
             return pattern.matches(ip)
         }

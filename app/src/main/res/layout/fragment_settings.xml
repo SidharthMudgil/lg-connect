@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:backgroundTint="@color/grey_700"
     android:orientation="vertical">
 
@@ -49,8 +50,8 @@
             android:id="@+id/tv_connection_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/disconnected"
-            android:textColor="@color/soft_red"
+            tools:text="@string/disconnected"
+            tools:textColor="@color/soft_red"
             android:textSize="40sp" />
 
         <LinearLayout

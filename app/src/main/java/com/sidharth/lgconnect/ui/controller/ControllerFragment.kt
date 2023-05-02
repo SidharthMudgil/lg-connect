@@ -6,9 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentControllerBinding
 import com.sidharth.lgconnect.service.ServiceManager
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModelFactory
 import com.sidharth.lgconnect.util.LGConnectionDialog
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
@@ -17,6 +22,10 @@ import kotlinx.coroutines.launch
 class ControllerFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
     private var lgService: LGService? = null
+//    private val viewModel: ConnectionStatusViewModel by viewModels { ConnectionStatusViewModelFactory() }
+    private val viewModel: ConnectionStatusViewModel by activityViewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
@@ -30,8 +39,20 @@ class ControllerFragment : Fragment() {
     ): View {
         val binding = FragmentControllerBinding.inflate(inflater)
 
-//        binding.tvConnectionStatus.text =
-//        binding.tvConnectionStatus.setTextColor()
+        viewModel.connectionStatus.observe(viewLifecycleOwner) {
+            when {
+                it -> {
+                    binding.tvConnectionStatus.text = resourceProvider.getString(R.string.connected)
+                    binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.lime_green))
+                }
+
+                else -> {
+                    binding.tvConnectionStatus.text =
+                        resourceProvider.getString(R.string.disconnected)
+                    binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.soft_red))
+                }
+            }
+        }
 
         binding.mcvSetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {

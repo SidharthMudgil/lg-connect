@@ -18,8 +18,8 @@
     <string name="clear_kml">Clear KML</string>
     <string name="relaunch">Relaunch</string>
     <string name="control_your_system">Control your system</string>
-    <string name="disconnected">Connected</string>
-    <string name="connected">Disconnected</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="ip">IP</string>

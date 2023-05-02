@@ -7,10 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentSettingsBinding
 import com.sidharth.lgconnect.domain.model.SSHConfig
 import com.sidharth.lgconnect.service.ServiceManager
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModelFactory
 import com.sidharth.lgconnect.util.KeyboardUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
@@ -22,6 +28,10 @@ const val HINT_PORT: String = "8080"
 
 class SettingsFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
+//    private val viewModel: ConnectionStatusViewModel by lazy {
+//        ViewModelProvider(this)[ConnectionStatusViewModel::class.java]
+//    }
+    private val viewModel: ConnectionStatusViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +83,20 @@ class SettingsFragment : Fragment() {
             }
         }
 
-//        binding.tvConnectionStatus.text
-//        binding.tvConnectionStatus.setTextColor()
+        viewModel.connectionStatus.observe(viewLifecycleOwner) {
+            when {
+                it -> {
+                    binding.tvConnectionStatus.text = resourceProvider.getString(R.string.connected)
+                    binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.lime_green))
+                }
+
+                else -> {
+                    binding.tvConnectionStatus.text =
+                        resourceProvider.getString(R.string.disconnected)
+                    binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.soft_red))
+                }
+            }
+        }
 
         binding.etPort.setOnEditorActionListener { v, _, _ ->
             KeyboardUtils.hideSoftKeyboard(v)
@@ -83,6 +105,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.mcvConnect.setOnClickListener {
+            viewModel.toggleConnectionStatus() // TODO("debug")
             KeyboardUtils.hideSoftKeyboard(it)
             connectIfValid(binding)
         }

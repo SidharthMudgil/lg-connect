@@ -12,7 +12,7 @@ import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getHomeDataUseCaseImpl: GetHomeDataUseCaseImpl,
+    getHomeDataUseCaseImpl: GetHomeDataUseCaseImpl,
     private val getMarkersUseCaseImpl: GetMarkersUseCaseImpl,
     private val deleteMarkerUseCaseImpl: DeleteMarkerUseCaseImpl
 ) : ViewModel() {

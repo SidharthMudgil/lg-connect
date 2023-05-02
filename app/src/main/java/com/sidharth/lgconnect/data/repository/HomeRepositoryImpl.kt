@@ -1,5 +1,6 @@
 package com.sidharth.lgconnect.data.repository
 
+import com.sidharth.lgconnect.DummyData
 import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.model.Planet
@@ -23,7 +24,7 @@ class HomeRepositoryImpl: HomeRepository {
     }
 
     override fun getAllMarkers(): MutableList<Marker> {
-        TODO("Not yet implemented")
+        return DummyData.markers.toMutableList()
     }
 
     override fun addMarker(marker: Marker) {

@@ -7,6 +7,9 @@ import com.sidharth.lgconnect.domain.model.Planet
 import com.sidharth.lgconnect.domain.model.Wonder
 
 object Constants {
+    const val CONNECTED = "connected"
+    const val DISCONNECTED = "disconnected"
+
     val planets: List<Planet> = listOf(
         Planet(
             cover = R.drawable.ic_earth,

@@ -1,19 +1,17 @@
 package com.sidharth.lgconnect.ui.controller
 
-import com.sidharth.lgconnect.service.LGService
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentControllerBinding
+import com.sidharth.lgconnect.service.LGService
 import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
-import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModelFactory
 import com.sidharth.lgconnect.util.LGConnectionDialog
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
@@ -22,9 +20,7 @@ import kotlinx.coroutines.launch
 class ControllerFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
     private var lgService: LGService? = null
-//    private val viewModel: ConnectionStatusViewModel by viewModels { ConnectionStatusViewModelFactory() }
     private val viewModel: ConnectionStatusViewModel by activityViewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

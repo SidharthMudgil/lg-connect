@@ -6,16 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sidharth.lgconnect.domain.model.HomeData
 import com.sidharth.lgconnect.domain.model.Marker
+import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
+import com.sidharth.lgconnect.ui.observers.MarkersObserver
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     getHomeDataUseCaseImpl: GetHomeDataUseCaseImpl,
     private val getMarkersUseCaseImpl: GetMarkersUseCaseImpl,
-    private val deleteMarkerUseCaseImpl: DeleteMarkerUseCaseImpl
-) : ViewModel() {
+    private val deleteMarkerUseCaseImpl: DeleteMarkerUseCaseImpl,
+    addObserverUseCaseImpl: AddObserverUseCaseImpl,
+) : ViewModel(), MarkersObserver {
 
     private val _homeData = getHomeDataUseCaseImpl.execute()
     val homeData: HomeData get() = _homeData
@@ -28,12 +31,19 @@ class HomeViewModel(
         viewModelScope.launch {
             _markers.postValue(getMarkersUseCaseImpl.execute())
         }
+        addObserverUseCaseImpl.execute(this)
     }
 
     fun deleteMarker(marker: Marker) {
         val updatedMarkers = markers.value?.apply { remove(marker) }
         updatedMarkers?.let { _markers.value = it }
         viewModelScope.launch { deleteMarkerUseCaseImpl.execute(marker) }
+    }
+
+    override fun onDataChanged() {
+        viewModelScope.launch {
+            _markers.postValue(getMarkersUseCaseImpl.execute())
+        }
     }
 }
 

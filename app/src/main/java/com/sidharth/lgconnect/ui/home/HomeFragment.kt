@@ -2,6 +2,7 @@ package com.sidharth.lgconnect.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import com.sidharth.lgconnect.data.repository.HomeRepositoryImpl
+import com.sidharth.lgconnect.data.repository.DataRepositoryImpl
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
+import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
@@ -27,9 +29,10 @@ class HomeFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory(
-            GetHomeDataUseCaseImpl(HomeRepositoryImpl()),
-            GetMarkersUseCaseImpl(HomeRepositoryImpl()),
-            DeleteMarkerUseCaseImpl(HomeRepositoryImpl())
+            GetHomeDataUseCaseImpl(DataRepositoryImpl),
+            GetMarkersUseCaseImpl(DataRepositoryImpl),
+            DeleteMarkerUseCaseImpl(DataRepositoryImpl),
+            AddObserverUseCaseImpl(DataRepositoryImpl)
         )
     }
 
@@ -99,11 +102,12 @@ class HomeFragment : Fragment() {
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvMarkers)
 
-        viewModel.markers.observe(viewLifecycleOwner) {
+        viewModel.markers.observe(viewLifecycleOwner) { markers ->
+            Log.d("homemarkers", markers.toString())
             binding.rvMarkers.adapter = context?.let { ctx ->
                 MarkersAdapter(
                     context = ctx,
-                    markers = it,
+                    markers = markers,
                     resourceProvider = resourceProvider,
                     lifecycleScope = lifecycleScope
                 )
@@ -113,5 +117,4 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
-
 }

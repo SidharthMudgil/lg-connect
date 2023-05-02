@@ -5,11 +5,11 @@ import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.model.Planet
 import com.sidharth.lgconnect.domain.model.Wonder
 
-interface HomeRepository {
+interface DataRepository {
     fun getAllPlanets(): List<Planet>
     fun getAllCharts(): List<Chart>
     fun getAllWonders(): List<Wonder>
-    fun getAllMarkers(): MutableList<Marker>
-    fun addMarker(marker: Marker)
-    fun deleteMarker(marker: Marker)
+    suspend fun getAllMarkers(): MutableList<Marker>
+    suspend fun addMarker(marker: Marker)
+    suspend fun deleteMarker(marker: Marker)
 }

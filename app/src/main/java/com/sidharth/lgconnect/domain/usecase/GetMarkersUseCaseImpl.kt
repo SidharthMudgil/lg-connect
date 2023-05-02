@@ -1,11 +1,10 @@
 package com.sidharth.lgconnect.domain.usecase
 
-import androidx.lifecycle.MutableLiveData
+import com.sidharth.lgconnect.data.repository.HomeRepositoryImpl
 import com.sidharth.lgconnect.domain.model.Marker
-import com.sidharth.lgconnect.domain.repository.HomeRepository
 
-class GetMarkersUseCaseImpl(private val repository: HomeRepository) : GetMarkersUseCase {
-    override suspend fun execute(): MutableLiveData<MutableList<Marker>> {
+class GetMarkersUseCaseImpl(private val repository: HomeRepositoryImpl) : GetMarkersUseCase {
+    override suspend fun execute(): MutableList<Marker> {
         return repository.getAllMarkers()
     }
 }

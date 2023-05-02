@@ -1,9 +1,9 @@
 package com.sidharth.lgconnect.domain.usecase
 
+import com.sidharth.lgconnect.data.repository.HomeRepositoryImpl
 import com.sidharth.lgconnect.domain.model.HomeData
-import com.sidharth.lgconnect.domain.repository.HomeRepository
 
-class GetHomeDataUseCaseImpl(private val repository: HomeRepository) : GetHomeDataUseCase {
+class GetHomeDataUseCaseImpl(private val repository: HomeRepositoryImpl) : GetHomeDataUseCase {
     override fun execute(): HomeData {
         return HomeData(
             planets = repository.getAllPlanets(),

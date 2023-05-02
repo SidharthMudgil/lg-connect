@@ -1,6 +1,5 @@
 package com.sidharth.lgconnect.data.repository
 
-import androidx.lifecycle.MutableLiveData
 import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.model.Planet
@@ -23,7 +22,7 @@ class HomeRepositoryImpl: HomeRepository {
         return Constants.wonders
     }
 
-    override fun getAllMarkers(): MutableLiveData<MutableList<Marker>> {
+    override fun getAllMarkers(): MutableList<Marker> {
         TODO("Not yet implemented")
     }
 

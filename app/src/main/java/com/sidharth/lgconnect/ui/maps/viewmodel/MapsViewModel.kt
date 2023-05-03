@@ -5,16 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sidharth.lgconnect.domain.model.Marker
+import com.sidharth.lgconnect.domain.usecase.AddMarkerUseCase
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCase
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCase
-import com.sidharth.lgconnect.domain.usecase.ModifyMarkersUseCase
 import com.sidharth.lgconnect.ui.observers.MarkersObserver
 import kotlinx.coroutines.launch
 
 class MapsViewModel(
+    addObserverUseCase: AddObserverUseCase,
     private val getMarkersUseCase: GetMarkersUseCase,
-    private val addMarkerUseCase: ModifyMarkersUseCase,
-    addObserverUseCase: AddObserverUseCase
+    private val addMarkerUseCase: AddMarkerUseCase,
 ) : ViewModel(), MarkersObserver {
 
     private val _markers = MutableLiveData<MutableList<Marker>>()

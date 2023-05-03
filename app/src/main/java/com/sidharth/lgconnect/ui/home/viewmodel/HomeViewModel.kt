@@ -7,17 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.sidharth.lgconnect.domain.model.HomeData
 import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCase
+import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCase
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCase
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCase
-import com.sidharth.lgconnect.domain.usecase.ModifyMarkersUseCase
 import com.sidharth.lgconnect.ui.observers.MarkersObserver
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     getHomeDataUseCase: GetHomeDataUseCase,
-    private val getMarkersUseCase: GetMarkersUseCase,
-    private val deleteMarkerUseCase: ModifyMarkersUseCase,
     addObserverUseCaseImpl: AddObserverUseCase,
+    private val getMarkersUseCase: GetMarkersUseCase,
+    private val deleteMarkerUseCase: DeleteMarkerUseCase,
 ) : ViewModel(), MarkersObserver {
 
     private val _homeData = getHomeDataUseCase.execute()

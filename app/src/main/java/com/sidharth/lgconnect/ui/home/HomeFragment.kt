@@ -2,7 +2,6 @@ package com.sidharth.lgconnect.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -86,24 +85,7 @@ class HomeFragment : Fragment() {
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvWonders)
 
-        binding.rvMarkers.layoutManager = LinearLayoutManager(
-            context, LinearLayoutManager.VERTICAL, false
-        )
-
-        binding.rvMarkers.adapter = context?.let { ctx ->
-            viewModel.markers.value?.let {
-                MarkersAdapter(
-                    context = ctx,
-                    markers = it,
-                    resourceProvider = resourceProvider,
-                    lifecycleScope = lifecycleScope
-                )
-            }
-        }
-        LinearSnapHelper().attachToRecyclerView(binding.rvMarkers)
-
         viewModel.markers.observe(viewLifecycleOwner) { markers ->
-            Log.d("homemarkers", markers.toString())
             binding.rvMarkers.adapter = context?.let { ctx ->
                 MarkersAdapter(
                     context = ctx,
@@ -114,6 +96,10 @@ class HomeFragment : Fragment() {
             }
             binding.rvMarkers.adapter?.notifyDataSetChanged()
         }
+        binding.rvMarkers.layoutManager = LinearLayoutManager(
+            context, LinearLayoutManager.VERTICAL, false
+        )
+        LinearSnapHelper().attachToRecyclerView(binding.rvMarkers)
 
         return binding.root
     }

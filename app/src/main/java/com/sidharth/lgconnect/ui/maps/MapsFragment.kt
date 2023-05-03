@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +51,6 @@ class MapsFragment : Fragment() {
 
         viewModel.markers.observe(viewLifecycleOwner) { markers ->
             googleMap.clear()
-
             markers.forEach { mkr ->
                 googleMap.addMarker(
                     MarkerOptions().position(mkr.latLng).title(mkr.title)
@@ -63,12 +63,11 @@ class MapsFragment : Fragment() {
         googleMap.setOnMapLongClickListener { latLng ->
             context?.let { ctx ->
                 if (NetworkUtils.isNetworkConnected(ctx)) {
-                    val marker =
-                        MarkerMapper(ctx).mapAddressToMarker(latLng.latitude, latLng.longitude)
+                    val marker = MarkerMapper(ctx).mapAddressToMarker(latLng.latitude, latLng.longitude)
 
-                    marker?.let {
+                    marker?.let { mkr ->
                         vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
-                        viewModel.addMarker(it)
+                        viewModel.addMarker(mkr)
                     }
                 }
             }

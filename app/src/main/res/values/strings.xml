@@ -29,6 +29,7 @@
     <string name="code_editor">Code editor</string>
     <string name="change_planet">Change Planet</string>
     <string name="send_kml">Send KML</string>
+    <string name="kml_boilerplate">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;\n&lt;kml xmlns=&quot;http://www.opengis.net/kml/2.2&quot;&gt;\n\n&lt;/kml&gt;</string>
     <string name="no_network_title">No Network Connection</string>
     <string name="no_network_description">It looks like you are not connected to the internet. Please check your network settings and try again.</string>
     <string name="no_network_button_text">OK</string>

@@ -2,22 +2,22 @@ package com.sidharth.lgconnect.ui.maps.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sidharth.lgconnect.domain.usecase.AddMarkerUseCaseImpl
-import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
-import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
+import com.sidharth.lgconnect.domain.usecase.AddObserverUseCase
+import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCase
+import com.sidharth.lgconnect.domain.usecase.ModifyMarkersUseCase
 
 class MapsViewModelFactory(
-    private val getMarkersUseCaseImpl: GetMarkersUseCaseImpl,
-    private val addMarkerUseCaseImpl: AddMarkerUseCaseImpl,
-    private val addObserverUseCaseImpl: AddObserverUseCaseImpl,
+    private val getMarkersUseCase: GetMarkersUseCase,
+    private val addMarkerUseCase: ModifyMarkersUseCase,
+    private val addObserverUseCase: AddObserverUseCase,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MapsViewModel(
-                getMarkersUseCaseImpl,
-                addMarkerUseCaseImpl,
-                addObserverUseCaseImpl
+                getMarkersUseCase,
+                addMarkerUseCase,
+                addObserverUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

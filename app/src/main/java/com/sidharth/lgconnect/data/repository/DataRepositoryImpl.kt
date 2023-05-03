@@ -38,11 +38,11 @@ object DataRepositoryImpl: DataRepository {
         notifyObservers()
     }
 
-    fun addObserver(observer: MarkersObserver) {
+    override fun addObserver(observer: MarkersObserver) {
         observers.add(observer)
     }
 
-    fun removeObserver(observer: MarkersObserver) {
+    override fun removeObserver(observer: MarkersObserver) {
         observers.remove(observer)
     }
 

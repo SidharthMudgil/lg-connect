@@ -13,6 +13,8 @@
     <color name="lime_green">#FFC3D8B7</color>
     <color name="pale_blue">#FFE1F5FE</color>
     <color name="soft_green">#FFD4E6A3</color>
+    <color name="soft_purple">#F0EDF5</color>
+    <color name="berry_purple">#786572</color>
 
     <!-- xml colors -->
     <color name="xml_tags">#FFB2CCD6</color>

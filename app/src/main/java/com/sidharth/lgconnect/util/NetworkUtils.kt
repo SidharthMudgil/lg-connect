@@ -1,4 +1,3 @@
-import android.app.AlertDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -24,7 +23,6 @@ class NetworkConnectivityCallback(
 object NetworkUtils {
 
     private var connectivityCallback: NetworkConnectivityCallback? = null
-    private var noNetworkDialog: AlertDialog? = null
 
     fun startNetworkCallback(
         context: Context,
@@ -62,31 +60,5 @@ object NetworkUtils {
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET))
-    }
-
-    fun showNoNetworkDialog(context: Context, onRetry: () -> Unit) {
-//        val builder = AlertDialog.Builder(context)
-//        builder.setTitle("No internet connection")
-//        builder.setMessage("Please check your network settings and try again.")
-//        builder.setCancelable(false)
-//        builder.setPositiveButton("Retry") { dialog: DialogInterface, _: Int ->
-//            if (isNetworkConnected(context)) {
-//                // If the device is now connected to the internet, call the onRetry function
-//                onRetry.invoke()
-//            } else {
-//                // If the device is still not connected to the internet, show the dialog again
-//                showNoNetworkDialog(context, onRetry)
-//            }
-//            dialog.dismiss()
-//        }
-//        builder.setNegativeButton("Cancel") { dialog: DialogInterface, _: Int ->
-//            dialog.dismiss()
-//        }
-//        builder.show()
-    }
-
-    fun dismissNoNetworkDialog() {
-        noNetworkDialog?.dismiss()
-        noNetworkDialog = null
     }
 }

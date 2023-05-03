@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentCodeEditorBinding
 import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.util.LGConnectionDialog
+import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -77,10 +77,10 @@ class CodeEditorFragment : Fragment() {
 
         binding.fabSendKml.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.sendKml(binding.codeView.text.toString()) ?: context?.let { it1 ->
-                    LGConnectionDialog.show(it1) {
-
-                    }
+                lgService?.sendKml(binding.codeView.text.toString()) ?: context?.let {
+//                    DialogUtils.show(it1) {
+//
+//                    }
                 }
             }
         }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.MaterialComponents"
+    app:cardBackgroundColor="@color/soft_purple"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:contentPaddingBottom="30dp"
+    app:contentPaddingLeft="30dp"
+    app:contentPaddingRight="30dp"
+    app:contentPaddingTop="50dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
+            tools:src="@drawable/cartoon3" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textColor="@color/berry_purple"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            tools:text="No Internet Connection" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="4"
+            android:textAlignment="center"
+            android:textColor="@color/berry_purple"
+            android:textSize="24sp"
+            tools:text="@string/connection_failed_description" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:theme="@style/Theme.MaterialComponents"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="50dp"
+            app:cardElevation="0dp"
+            app:contentPaddingBottom="10dp"
+            app:contentPaddingLeft="50dp"
+            app:contentPaddingRight="50dp"
+            app:contentPaddingTop="10dp"
+            app:strokeColor="@color/berry_purple"
+            app:strokeWidth="2dp">
+
+            <TextView
+                android:id="@+id/tv_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textColor="@color/berry_purple"
+                android:textSize="18sp"
+                tools:text="Retry" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

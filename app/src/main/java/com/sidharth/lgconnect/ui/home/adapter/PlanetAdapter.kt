@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.sidharth.lgconnect.domain.model.Planet
 import com.sidharth.lgconnect.databinding.ItemCardPlanetBinding
 import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.util.LGConnectionDialog
+import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -50,12 +50,12 @@ class PlanetAdapter(
             )
 
             itemBinding.mcvPlanetCard.setOnClickListener {
-                lifecycleScope.launch {
-                    ServiceManager.getLGService()?.changePlanet(planet.name)
-                        ?: LGConnectionDialog.show(context) {
-
-                        }
-                }
+//                lifecycleScope.launch {
+//                    ServiceManager.getLGService()?.changePlanet(planet.name)
+//                        ?: DialogUtils.show(context) {
+//
+//                        }
+//                }
             }
 
             itemBinding.mcvPlanetCard.setOnLongClickListener {

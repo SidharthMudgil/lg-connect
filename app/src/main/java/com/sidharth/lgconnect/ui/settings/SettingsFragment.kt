@@ -14,6 +14,7 @@ import com.sidharth.lgconnect.domain.model.SSHConfig
 import com.sidharth.lgconnect.service.SSHService
 import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
+import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.KeyboardUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
@@ -25,11 +26,20 @@ const val HINT_PORT: String = "8080"
 
 class SettingsFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
+    private lateinit var dialogUtils: DialogUtils
     private val viewModel: ConnectionStatusViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
+        dialogUtils = DialogUtils(
+            context = requireContext(),
+            image = resourceProvider.getDrawable(R.drawable.cartoon2),
+            title = resourceProvider.getString(R.string.connection_failed_title),
+            description = resourceProvider.getString(R.string.connection_failed_description),
+            buttonLabel = resourceProvider.getString(R.string.connection_failed_button_text),
+            onDialogButtonClick = { dialogUtils.dismiss() }
+        )
     }
 
     override fun onCreateView(
@@ -99,6 +109,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.mcvConnect.setOnClickListener {
+            dialogUtils.show()
             viewModel.toggleConnectionStatus() // TODO("debug")
             KeyboardUtils.hideSoftKeyboard(it)
             connectIfValid(binding)

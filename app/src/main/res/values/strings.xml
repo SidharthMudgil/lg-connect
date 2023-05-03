@@ -29,4 +29,13 @@
     <string name="code_editor">Code editor</string>
     <string name="change_planet">Change Planet</string>
     <string name="send_kml">Send KML</string>
+    <string name="no_network_title">No Network Connection</string>
+    <string name="no_network_description">It looks like you are not connected to the internet. Please check your network settings and try again.</string>
+    <string name="no_network_button_text">OK</string>
+    <string name="connection_failed_title">Connection Failed</string>
+    <string name="connection_failed_description">We could not establish a connection to the liquid galaxy. Please check your SSH credentials and make sure the rig is online.</string>
+    <string name="connection_failed_button_text">OK</string>
+    <string name="no_connection_title">No Connection</string>
+    <string name="no_connection_description">You are not currently connected to the liquid galaxy. Please make sure you have established an SSH connection and try again.</string>
+    <string name="no_connection_button_text">OK</string>
 </resources>

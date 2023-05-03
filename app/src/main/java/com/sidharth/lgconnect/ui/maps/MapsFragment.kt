@@ -1,11 +1,9 @@
 package com.sidharth.lgconnect.ui.maps
 
 import NetworkUtils
-import android.content.Context
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +23,8 @@ import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
 import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModel
 import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModelFactory
+import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.util.ResourceProvider
 
 
 class MapsFragment : Fragment() {
@@ -63,7 +63,8 @@ class MapsFragment : Fragment() {
         googleMap.setOnMapLongClickListener { latLng ->
             context?.let { ctx ->
                 if (NetworkUtils.isNetworkConnected(ctx)) {
-                    val marker = MarkerMapper(ctx).mapAddressToMarker(latLng.latitude, latLng.longitude)
+                    val marker =
+                        MarkerMapper(ctx).mapAddressToMarker(latLng.latitude, latLng.longitude)
 
                     marker?.let { mkr ->
                         vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
@@ -77,12 +78,23 @@ class MapsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        NetworkUtils.startNetworkCallback(context = requireContext(), onConnectionLost = {
-            NetworkUtils.showNoNetworkDialog(
-                context = requireContext(),
-                onRetry = { onRetry(requireContext()) },
-            )
-        }, onConnectionAvailable = { NetworkUtils.dismissNoNetworkDialog() })
+        val resourceProvider = ResourceProvider(requireContext())
+
+        val dialogUtils = DialogUtils(
+            context = requireContext(),
+            image = resourceProvider.getDrawable(R.drawable.cartoon1),
+            title = resourceProvider.getString(R.string.no_network_title),
+            description = resourceProvider.getString(R.string.no_network_description),
+            buttonLabel = resourceProvider.getString(R.string.no_network_button_text),
+            showButton = false
+        )
+
+        NetworkUtils.startNetworkCallback(
+            context = requireContext(),
+            onConnectionLost = { dialogUtils.show() },
+            onConnectionAvailable = { dialogUtils.dismiss() }
+        )
+
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
@@ -90,15 +102,5 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-    }
-
-    private fun onRetry(context: Context) {
-        if (NetworkUtils.isNetworkConnected(context)) {
-            NetworkUtils.dismissNoNetworkDialog()
-        } else {
-            NetworkUtils.showNoNetworkDialog(context = context, onRetry = {
-                onRetry(context)
-            })
-        }
     }
 }

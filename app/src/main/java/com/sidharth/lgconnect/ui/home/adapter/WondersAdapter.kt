@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.sidharth.lgconnect.domain.model.Wonder
 import com.sidharth.lgconnect.databinding.ItemCardWonderBinding
 import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.util.LGConnectionDialog
+import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -51,12 +51,12 @@ class WondersAdapter(
             )
 
             itemBinding.mcvWonderCard.setOnClickListener {
-                lifecycleScope.launch {
-                    ServiceManager.getLGService()?.flyToAndOrbit(wonder.latLng)
-                        ?: LGConnectionDialog.show(context) {
-
-                        }
-                }
+//                lifecycleScope.launch {
+//                    ServiceManager.getLGService()?.flyToAndOrbit(wonder.latLng)
+//                        ?: DialogUtils.show(context) {
+//
+//                        }
+//                }
             }
 
             itemBinding.mcvWonderCard.setOnLongClickListener {

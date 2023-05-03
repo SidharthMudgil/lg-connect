@@ -23,7 +23,6 @@ class MarkerMapper(private val context: Context) {
                     title = address.getAddressLine(0).split(',').take(2).joinToString(", "),
                     subtitle = address.getAddressLine(0),
                     latLng = LatLng(latitude, longitude),
-                    color = "#FFFFFF"
                 )
             }
         }

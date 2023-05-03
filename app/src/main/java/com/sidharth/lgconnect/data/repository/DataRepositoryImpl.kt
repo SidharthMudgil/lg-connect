@@ -5,7 +5,7 @@ import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.model.Planet
 import com.sidharth.lgconnect.domain.model.Wonder
 import com.sidharth.lgconnect.domain.repository.DataRepository
-import com.sidharth.lgconnect.ui.observers.MarkersObserver
+import com.sidharth.lgconnect.ui.observer.MarkersObserver
 import com.sidharth.lgconnect.util.Constants
 
 object DataRepositoryImpl: DataRepository {

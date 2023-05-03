@@ -10,7 +10,7 @@ import com.sidharth.lgconnect.domain.usecase.AddObserverUseCase
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCase
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCase
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCase
-import com.sidharth.lgconnect.ui.observers.MarkersObserver
+import com.sidharth.lgconnect.ui.observer.MarkersObserver
 import kotlinx.coroutines.launch
 
 class HomeViewModel(

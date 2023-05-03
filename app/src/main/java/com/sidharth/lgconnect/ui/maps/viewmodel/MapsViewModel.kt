@@ -8,7 +8,7 @@ import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.usecase.AddMarkerUseCase
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCase
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCase
-import com.sidharth.lgconnect.ui.observers.MarkersObserver
+import com.sidharth.lgconnect.ui.observer.MarkersObserver
 import kotlinx.coroutines.launch
 
 class MapsViewModel(

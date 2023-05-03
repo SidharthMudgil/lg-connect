@@ -1,4 +1,4 @@
-package com.sidharth.lgconnect.ui.observers
+package com.sidharth.lgconnect.ui.observer
 
 interface MarkersObserver {
     fun onDataChanged()

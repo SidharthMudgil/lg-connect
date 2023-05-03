@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
@@ -47,10 +49,14 @@ class DialogUtils(
 
 
     fun show() {
-        dialog.show()
+        Handler(Looper.getMainLooper()).post {
+            dialog.show()
+        }
     }
 
     fun dismiss() {
-        dialog.dismiss()
+        Handler(Looper.getMainLooper()).post {
+            dialog.dismiss()
+        }
     }
 }

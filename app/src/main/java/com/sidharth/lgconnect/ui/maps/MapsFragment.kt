@@ -92,7 +92,9 @@ class MapsFragment : Fragment() {
         NetworkUtils.startNetworkCallback(
             context = requireContext(),
             onConnectionLost = { dialogUtils.show() },
-            onConnectionAvailable = { dialogUtils.dismiss() }
+            onConnectionAvailable = {
+                dialogUtils.dismiss()
+            }
         )
 
         return inflater.inflate(R.layout.fragment_maps, container, false)

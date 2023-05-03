@@ -5,16 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sidharth.lgconnect.domain.model.Marker
-import com.sidharth.lgconnect.domain.usecase.AddMarkerUseCaseImpl
-import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
-import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
+import com.sidharth.lgconnect.domain.usecase.AddObserverUseCase
+import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCase
+import com.sidharth.lgconnect.domain.usecase.ModifyMarkersUseCase
 import com.sidharth.lgconnect.ui.observers.MarkersObserver
 import kotlinx.coroutines.launch
 
 class MapsViewModel(
-    private val getMarkersUseCaseImpl: GetMarkersUseCaseImpl,
-    private val addMarkerUseCaseImpl: AddMarkerUseCaseImpl,
-    addObserverUseCaseImpl: AddObserverUseCaseImpl
+    private val getMarkersUseCase: GetMarkersUseCase,
+    private val addMarkerUseCase: ModifyMarkersUseCase,
+    addObserverUseCase: AddObserverUseCase
 ) : ViewModel(), MarkersObserver {
 
     private val _markers = MutableLiveData<MutableList<Marker>>()
@@ -23,20 +23,20 @@ class MapsViewModel(
 
     init {
         viewModelScope.launch {
-            _markers.postValue(getMarkersUseCaseImpl.execute())
+            _markers.postValue(getMarkersUseCase.execute())
         }
-        addObserverUseCaseImpl.execute(this)
+        addObserverUseCase.execute(this)
     }
 
     fun addMarker(marker: Marker) {
         val updatedMarkers = markers.value?.apply { add(marker) }
         updatedMarkers?.let { _markers.value = it }
-        viewModelScope.launch { addMarkerUseCaseImpl.execute(marker) }
+        viewModelScope.launch { addMarkerUseCase.execute(marker) }
     }
 
     override fun onDataChanged() {
         viewModelScope.launch {
-            _markers.postValue(getMarkersUseCaseImpl.execute())
+            _markers.postValue(getMarkersUseCase.execute())
         }
     }
 }

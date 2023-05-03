@@ -6,21 +6,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sidharth.lgconnect.domain.model.HomeData
 import com.sidharth.lgconnect.domain.model.Marker
-import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
-import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
-import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCaseImpl
-import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
+import com.sidharth.lgconnect.domain.usecase.AddObserverUseCase
+import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCase
+import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCase
+import com.sidharth.lgconnect.domain.usecase.ModifyMarkersUseCase
 import com.sidharth.lgconnect.ui.observers.MarkersObserver
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    getHomeDataUseCaseImpl: GetHomeDataUseCaseImpl,
-    private val getMarkersUseCaseImpl: GetMarkersUseCaseImpl,
-    private val deleteMarkerUseCaseImpl: DeleteMarkerUseCaseImpl,
-    addObserverUseCaseImpl: AddObserverUseCaseImpl,
+    getHomeDataUseCase: GetHomeDataUseCase,
+    private val getMarkersUseCase: GetMarkersUseCase,
+    private val deleteMarkerUseCase: ModifyMarkersUseCase,
+    addObserverUseCaseImpl: AddObserverUseCase,
 ) : ViewModel(), MarkersObserver {
 
-    private val _homeData = getHomeDataUseCaseImpl.execute()
+    private val _homeData = getHomeDataUseCase.execute()
     val homeData: HomeData get() = _homeData
 
     private val _markers = MutableLiveData<MutableList<Marker>>()
@@ -29,7 +29,7 @@ class HomeViewModel(
 
     init {
         viewModelScope.launch {
-            _markers.postValue(getMarkersUseCaseImpl.execute())
+            _markers.postValue(getMarkersUseCase.execute())
         }
         addObserverUseCaseImpl.execute(this)
     }
@@ -37,12 +37,12 @@ class HomeViewModel(
     fun deleteMarker(marker: Marker) {
         val updatedMarkers = markers.value?.apply { remove(marker) }
         updatedMarkers?.let { _markers.value = it }
-        viewModelScope.launch { deleteMarkerUseCaseImpl.execute(marker) }
+        viewModelScope.launch { deleteMarkerUseCase.execute(marker) }
     }
 
     override fun onDataChanged() {
         viewModelScope.launch {
-            _markers.postValue(getMarkersUseCaseImpl.execute())
+            _markers.postValue(getMarkersUseCase.execute())
         }
     }
 }

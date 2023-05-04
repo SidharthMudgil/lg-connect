@@ -38,6 +38,8 @@ class SettingsFragment : Fragment() {
             description = resourceProvider.getString(R.string.connection_failed_description),
             buttonLabel = resourceProvider.getString(R.string.connection_failed_button_text),
             onDialogButtonClick = { dialog.dismiss() })
+
+        ServiceManager.initializeDialog(requireContext())
     }
 
     override fun onCreateView(

@@ -105,7 +105,8 @@ class LGService(
     }
 
     suspend fun setLogos() {
-        // implementation for setLogos
+        val kml: String = ""
+        sendKml(kml)
     }
 
     suspend fun sendKml(data: String) {
@@ -114,22 +115,28 @@ class LGService(
 
     suspend fun createChart(type: String) {
         val kml = KMLService.createChartKML(type)
+        sendKml(kml)
     }
 
     suspend fun changePlanet(name: String) {
-
+        val kml: String = ""
+        sendKml(kml)
     }
 
     suspend fun createMarker(marker: Marker) {
         KMLService.createMarker(marker)
+        val kml: String = ""
+        sendKml(kml)
     }
 
     suspend fun flyTo(latLng: LatLng) {
-
+        val kml: String = ""
+        sendKml(kml)
     }
 
     private suspend fun orbit(latLng: LatLng) {
-
+        val kml: String = ""
+        sendKml(kml)
     }
 
     suspend fun flyToAndOrbit(latLng: LatLng) {

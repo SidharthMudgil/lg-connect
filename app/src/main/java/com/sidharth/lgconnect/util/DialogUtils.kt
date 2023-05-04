@@ -47,7 +47,6 @@ class DialogUtils(
         if (!showButton) mcv.visibility = View.GONE
     }
 
-
     fun show() {
         Handler(Looper.getMainLooper()).post {
             dialog.show()

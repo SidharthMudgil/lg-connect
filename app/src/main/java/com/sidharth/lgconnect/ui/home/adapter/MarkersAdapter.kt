@@ -33,11 +33,7 @@ class MarkersAdapter(
 
     override fun onBindViewHolder(holder: MarkerHolder, position: Int) {
         holder.bind(
-            context,
-            markers[position],
-            resourceProvider,
-            lifecycleScope,
-            onItemClickCallback
+            context, markers[position], resourceProvider, lifecycleScope, onItemClickCallback
         )
     }
 
@@ -61,6 +57,7 @@ class MarkersAdapter(
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
                         ServiceManager.getLGService()?.createMarker(marker)
+                            ?: ServiceManager.showNoConnectionDialog()
                     }
                 }
             }

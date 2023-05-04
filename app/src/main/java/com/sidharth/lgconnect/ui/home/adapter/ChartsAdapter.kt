@@ -55,6 +55,7 @@ class ChartsAdapter(
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
                         ServiceManager.getLGService()?.createChart(chart.type)
+                            ?: ServiceManager.showNoConnectionDialog()
                     }
                 }
             }

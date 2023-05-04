@@ -61,6 +61,7 @@ class PlanetAdapter(
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
                         ServiceManager.getLGService()?.changePlanet(planet.name)
+                            ?: ServiceManager.showNoConnectionDialog()
                     }
                 }
             }

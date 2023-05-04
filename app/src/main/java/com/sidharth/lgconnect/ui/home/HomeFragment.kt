@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.data.local.AppDatabase
 import com.sidharth.lgconnect.data.local.LocalDataSourceImpl
@@ -25,6 +27,7 @@ import com.sidharth.lgconnect.ui.home.adapter.MarkersAdapter
 import com.sidharth.lgconnect.ui.home.adapter.PlanetAdapter
 import com.sidharth.lgconnect.ui.home.adapter.WondersAdapter
 import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
+import com.sidharth.lgconnect.ui.home.callback.SwipeToDeleteCallback
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModel
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModelFactory
 import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
@@ -77,7 +80,7 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
         dialog = DialogUtils(context = requireContext(),
-            image = resourceProvider.getDrawable(R.drawable.cartoon1),
+            image = resourceProvider.getDrawable(R.drawable.cartoon3),
             title = resourceProvider.getString(R.string.no_connection_title),
             description = resourceProvider.getString(R.string.no_connection_description),
             buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),
@@ -147,6 +150,16 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         binding.rvMarkers.layoutManager = LinearLayoutManager(
             context, LinearLayoutManager.VERTICAL, false
         )
+        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.markers.value?.get(viewHolder.adapterPosition)
+                    ?.let { viewModel.deleteMarker(it) }
+            }
+
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(binding.rvMarkers)
         LinearSnapHelper().attachToRecyclerView(binding.rvMarkers)
 
         return binding.root

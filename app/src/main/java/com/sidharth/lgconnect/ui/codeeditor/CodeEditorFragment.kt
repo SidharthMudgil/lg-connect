@@ -38,7 +38,7 @@ class CodeEditorFragment : Fragment() {
         resourceProvider = ResourceProvider(requireContext())
         dialog = DialogUtils(
             context = requireContext(),
-            image = resourceProvider.getDrawable(R.drawable.cartoon1),
+            image = resourceProvider.getDrawable(R.drawable.cartoon3),
             title = resourceProvider.getString(R.string.no_connection_title),
             description = resourceProvider.getString(R.string.no_connection_description),
             buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),

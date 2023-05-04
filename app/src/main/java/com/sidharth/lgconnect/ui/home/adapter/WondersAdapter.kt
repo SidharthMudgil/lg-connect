@@ -62,6 +62,7 @@ class WondersAdapter(
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
                         ServiceManager.getLGService()?.flyToAndOrbit(wonder.latLng)
+                            ?: ServiceManager.showNoConnectionDialog()
                     }
                 }
             }

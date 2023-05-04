@@ -29,8 +29,6 @@ class MapsViewModel(
     }
 
     fun addMarker(marker: Marker) {
-        val updatedMarkers = markers.value?.apply { add(marker) }
-        updatedMarkers?.let { _markers.value = it }
         viewModelScope.launch { addMarkerUseCase.execute(marker) }
     }
 

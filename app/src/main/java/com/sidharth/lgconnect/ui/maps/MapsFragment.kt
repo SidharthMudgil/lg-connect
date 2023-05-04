@@ -16,10 +16,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.sidharth.lgconnect.R
-import com.sidharth.lgconnect.data.local.AppDatabase
-import com.sidharth.lgconnect.data.local.LocalDataSourceImpl
 import com.sidharth.lgconnect.data.mapper.MarkerMapper
-import com.sidharth.lgconnect.data.repository.DataRepositoryImpl
+import com.sidharth.lgconnect.data.repository.AppRepository
 import com.sidharth.lgconnect.domain.usecase.AddMarkerUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
@@ -33,29 +31,13 @@ class MapsFragment : Fragment() {
     private val viewModel: MapsViewModel by viewModels {
         MapsViewModelFactory(
             GetMarkersUseCaseImpl(
-                DataRepositoryImpl(
-                    LocalDataSourceImpl(
-                        AppDatabase.getDatabase(
-                            requireContext()
-                        ).markerDao()
-                    )
-                )
-            ), AddMarkerUseCaseImpl(
-                DataRepositoryImpl(
-                    LocalDataSourceImpl(
-                        AppDatabase.getDatabase(
-                            requireContext()
-                        ).markerDao()
-                    )
-                )
-            ), AddObserverUseCaseImpl(
-                DataRepositoryImpl(
-                    LocalDataSourceImpl(
-                        AppDatabase.getDatabase(
-                            requireContext()
-                        ).markerDao()
-                    )
-                )
+                AppRepository.getInstance(requireContext())
+            ),
+            AddMarkerUseCaseImpl(
+                AppRepository.getInstance(requireContext())
+            ),
+            AddObserverUseCaseImpl(
+                AppRepository.getInstance(requireContext())
             )
         )
     }

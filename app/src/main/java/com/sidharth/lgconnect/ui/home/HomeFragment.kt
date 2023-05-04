@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sidharth.lgconnect.R
-import com.sidharth.lgconnect.data.local.AppDatabase
-import com.sidharth.lgconnect.data.local.LocalDataSourceImpl
-import com.sidharth.lgconnect.data.repository.DataRepositoryImpl
+import com.sidharth.lgconnect.data.repository.AppRepository
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
@@ -38,38 +36,15 @@ class HomeFragment : Fragment(), OnItemClickCallback {
     private lateinit var resourceProvider: ResourceProvider
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory(
-            GetHomeDataUseCaseImpl(
-                DataRepositoryImpl(
-                    LocalDataSourceImpl(
-                        AppDatabase.getDatabase(
-                            requireContext()
-                        ).markerDao()
-                    )
-                )
-            ), GetMarkersUseCaseImpl(
-                DataRepositoryImpl(
-                    LocalDataSourceImpl(
-                        AppDatabase.getDatabase(
-                            requireContext()
-                        ).markerDao()
-                    )
-                )
-            ), DeleteMarkerUseCaseImpl(
-                DataRepositoryImpl(
-                    LocalDataSourceImpl(
-                        AppDatabase.getDatabase(
-                            requireContext()
-                        ).markerDao()
-                    )
-                )
-            ), AddObserverUseCaseImpl(
-                DataRepositoryImpl(
-                    LocalDataSourceImpl(
-                        AppDatabase.getDatabase(
-                            requireContext()
-                        ).markerDao()
-                    )
-                )
+            GetHomeDataUseCaseImpl(AppRepository.getInstance(requireContext())),
+            GetMarkersUseCaseImpl(
+                AppRepository.getInstance(requireContext())
+            ),
+            DeleteMarkerUseCaseImpl(
+                AppRepository.getInstance(requireContext())
+            ),
+            AddObserverUseCaseImpl(
+                AppRepository.getInstance(requireContext())
             )
         )
     }

@@ -35,9 +35,9 @@ class HomeViewModel(
     }
 
     fun deleteMarker(marker: Marker) {
-        val updatedMarkers = markers.value?.apply { remove(marker) }
-        updatedMarkers?.let { _markers.value = it }
         viewModelScope.launch { deleteMarkerUseCase.execute(marker) }
+//        val updatedMarkers = markers.value?.apply { remove(marker) }
+//        updatedMarkers?.let { _markers.postValue(it) }
     }
 
     override fun onDataChanged() {

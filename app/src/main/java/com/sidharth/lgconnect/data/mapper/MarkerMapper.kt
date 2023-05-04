@@ -3,6 +3,7 @@ package com.sidharth.lgconnect.data.mapper
 import android.content.Context
 import android.location.Geocoder
 import com.google.android.gms.maps.model.LatLng
+import com.sidharth.lgconnect.data.local.MarkerEntity
 import com.sidharth.lgconnect.domain.model.Marker
 import java.util.Locale
 
@@ -26,5 +27,22 @@ class MarkerMapper(private val context: Context) {
                 )
             }
         }
+    }
+
+    fun fromEntity(entity: MarkerEntity): Marker {
+        return Marker(
+            title = entity.title,
+            subtitle = entity.subtitle,
+            latLng = LatLng(entity.latitude, entity.longitude)
+        )
+    }
+
+    fun toEntity(marker: Marker): MarkerEntity {
+        return MarkerEntity(
+            title = marker.title,
+            subtitle = marker.subtitle,
+            latitude = marker.latLng.latitude,
+            longitude = marker.latLng.longitude
+        )
     }
 }

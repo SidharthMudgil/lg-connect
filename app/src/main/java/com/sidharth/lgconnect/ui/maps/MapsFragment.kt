@@ -1,12 +1,12 @@
 package com.sidharth.lgconnect.ui.maps
 
-import NetworkUtils
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -24,7 +24,7 @@ import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
 import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModel
 import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModelFactory
 import com.sidharth.lgconnect.util.DialogUtils
-import com.sidharth.lgconnect.util.ResourceProvider
+import com.sidharth.lgconnect.util.NetworkUtils
 
 
 class MapsFragment : Fragment() {
@@ -35,6 +35,7 @@ class MapsFragment : Fragment() {
             AddObserverUseCaseImpl(DataRepositoryImpl)
         )
     }
+    private lateinit var dialog: DialogUtils
 
     private val callback = OnMapReadyCallback { googleMap ->
         googleMap.setMapStyle(context?.let {
@@ -70,6 +71,8 @@ class MapsFragment : Fragment() {
                         vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
                         viewModel.addMarker(mkr)
                     }
+                } else {
+                    dialog.show()
                 }
             }
         }
@@ -78,24 +81,20 @@ class MapsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val resourceProvider = ResourceProvider(requireContext())
-
-        val dialogUtils = DialogUtils(
+        dialog = DialogUtils(
             context = requireContext(),
-            image = resourceProvider.getDrawable(R.drawable.cartoon1),
-            title = resourceProvider.getString(R.string.no_network_title),
-            description = resourceProvider.getString(R.string.no_network_description),
-            buttonLabel = resourceProvider.getString(R.string.no_network_button_text),
+            image = ContextCompat.getDrawable(requireContext(), R.drawable.cartoon1)!!,
+            title = getString(R.string.no_network_title),
+            description = getString(R.string.no_network_description),
+            buttonLabel = getString(R.string.no_network_button_text),
             showButton = false
         )
 
-        NetworkUtils.startNetworkCallback(
-            context = requireContext(),
-            onConnectionLost = { dialogUtils.show() },
-            onConnectionAvailable = {
-                dialogUtils.dismiss()
-            }
-        )
+        NetworkUtils.startNetworkCallback(context = requireContext(), onConnectionLost = {
+            dialog.show()
+        }, onConnectionAvailable = {
+            dialog.dismiss()
+        })
 
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }

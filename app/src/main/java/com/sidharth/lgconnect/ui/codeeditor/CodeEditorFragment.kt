@@ -1,15 +1,17 @@
 package com.sidharth.lgconnect.ui.codeeditor
 
-import com.sidharth.lgconnect.service.LGService
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentCodeEditorBinding
+import com.sidharth.lgconnect.service.LGService
 import com.sidharth.lgconnect.service.ServiceManager
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
 import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
@@ -27,11 +29,20 @@ class CodeEditorFragment : Fragment() {
     private val patternString = Pattern.compile("[\"'][^\"']*?[\"']")
 
     private lateinit var resourceProvider: ResourceProvider
+    private lateinit var dialog: DialogUtils
     private var lgService: LGService? = null
+    private val viewModel: ConnectionStatusViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
+        dialog = DialogUtils(
+            context = requireContext(),
+            image = resourceProvider.getDrawable(R.drawable.cartoon1),
+            title = resourceProvider.getString(R.string.no_connection_title),
+            description = resourceProvider.getString(R.string.no_connection_description),
+            buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),
+            onDialogButtonClick = { dialog.dismiss() })
         if (ServiceManager.getSSHService()?.isConnected == true) {
             lgService = ServiceManager.getLGService()
         }
@@ -77,10 +88,10 @@ class CodeEditorFragment : Fragment() {
 
         binding.fabSendKml.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.sendKml(binding.codeView.text.toString()) ?: context?.let {
-//                    DialogUtils.show(it1) {
-//
-//                    }
+                if (viewModel.connectionStatus.value == true) {
+                    lgService?.sendKml(binding.codeView.text.toString()) ?: dialog.show()
+                } else {
+                    dialog.show()
                 }
             }
         }

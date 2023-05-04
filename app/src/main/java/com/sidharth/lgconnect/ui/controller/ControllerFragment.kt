@@ -19,19 +19,19 @@ import kotlinx.coroutines.launch
 
 class ControllerFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
-    private lateinit var dialogUtils: DialogUtils
+    private lateinit var dialog: DialogUtils
     private var lgService: LGService? = null
     private val viewModel: ConnectionStatusViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
-        dialogUtils = DialogUtils(context = requireContext(),
-            image = resourceProvider.getDrawable(R.drawable.cartoon3),
+        dialog = DialogUtils(context = requireContext(),
+            image = resourceProvider.getDrawable(R.drawable.cartoon1),
             title = resourceProvider.getString(R.string.no_connection_title),
             description = resourceProvider.getString(R.string.no_connection_description),
             buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),
-            onDialogButtonClick = { dialogUtils.dismiss() })
+            onDialogButtonClick = { dialog.dismiss() })
         if (ServiceManager.getSSHService()?.isConnected == true) {
             lgService = ServiceManager.getLGService()
         }
@@ -59,60 +59,53 @@ class ControllerFragment : Fragment() {
 
         binding.mcvSetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.setRefresh() ?: context?.let {
-                    dialogUtils.show()
-                }
-            }
-        }
-
-        binding.mcvSetSlaveRefresh.setOnClickListener {
-            lifecycleScope.launch {
-                lgService?.setRefresh() ?: context?.let {
-                    dialogUtils.show()
-                }
+                execute(action = { lgService?.setRefresh() }, onFailure = { dialog.show() })
             }
         }
 
         binding.mcvResetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.resetRefresh() ?: context?.let {
-                    dialogUtils.show()
-                }
+                execute(action = { lgService?.resetRefresh() }, onFailure = { dialog.show() })
             }
         }
 
         binding.mcvClearKml.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.clearKml() ?: context?.let {
-                    dialogUtils.show()
-                }
+                execute(action = { lgService?.clearKml() }, onFailure = { dialog.show() })
             }
         }
 
         binding.mcvRelaunch.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.relaunch() ?: context?.let {
-                    dialogUtils.show()
-                }
+                execute(action = { lgService?.relaunch() }, onFailure = { dialog.show() })
             }
         }
 
         binding.mcvReboot.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.reboot() ?: context?.let {
-                    dialogUtils.show()
-                }
+                execute(action = { lgService?.reboot() }, onFailure = { dialog.show() })
             }
         }
 
         binding.mcvPowerOff.setOnClickListener {
             lifecycleScope.launch {
-                lgService?.powerOff() ?: context?.let {
-                    dialogUtils.show()
-                }
+                execute(action = { lgService?.powerOff() ?: dialog.show() },
+                    onFailure = { dialog.show() })
             }
         }
 
         return binding.root
+    }
+
+    private suspend fun execute(action: suspend () -> Unit, onFailure: () -> Unit) {
+        try {
+            when (viewModel.connectionStatus.value) {
+                true -> action()
+                false -> onFailure()
+                else -> onFailure()
+            }
+        } catch (e: Exception) {
+            onFailure()
+        }
     }
 }

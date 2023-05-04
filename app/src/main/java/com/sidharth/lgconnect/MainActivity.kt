@@ -28,16 +28,14 @@ class MainActivity : AppCompatActivity() {
         val controllerFragment: Fragment = ControllerFragment()
         val settingsFragment: Fragment = SettingsFragment()
 
-        var activeFragment: Fragment = homeFragment
+        var activeFragment: Fragment? = null
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, homeFragment, "home").hide(homeFragment)
-            .add(R.id.fragment_container, codeEditorFragment, "code-editor")
-            .hide(codeEditorFragment)
-            .add(R.id.fragment_container, mapsFragment, "maps").hide(mapsFragment)
-            .add(R.id.fragment_container, controllerFragment, "controller").hide(controllerFragment)
-            .add(R.id.fragment_container, settingsFragment, "settings").hide(settingsFragment)
-            .commit()
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container, homeFragment, "home")
+            .hide(homeFragment).add(R.id.fragment_container, codeEditorFragment, "code-editor")
+            .hide(codeEditorFragment).add(R.id.fragment_container, mapsFragment, "maps")
+            .hide(mapsFragment).add(R.id.fragment_container, controllerFragment, "controller")
+            .hide(controllerFragment).add(R.id.fragment_container, settingsFragment, "settings")
+            .hide(settingsFragment).commit()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
@@ -71,12 +69,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun switchFragment(fragment: Fragment, active: Fragment): Fragment {
+    private fun switchFragment(fragment: Fragment, active: Fragment?): Fragment {
         if (active == fragment) return fragment
 
-        supportFragmentManager.beginTransaction()
-            .hide(active).show(fragment)
-            .commit()
+        if (active != null) {
+            supportFragmentManager.beginTransaction().hide(active).show(fragment).commit()
+        } else {
+            supportFragmentManager.beginTransaction().show(fragment).commit()
+        }
 
         return fragment
     }

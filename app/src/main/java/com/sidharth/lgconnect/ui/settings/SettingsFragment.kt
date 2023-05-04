@@ -26,20 +26,18 @@ const val HINT_PORT: String = "8080"
 
 class SettingsFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
-    private lateinit var dialogUtils: DialogUtils
+    private lateinit var dialog: DialogUtils
     private val viewModel: ConnectionStatusViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
-        dialogUtils = DialogUtils(
-            context = requireContext(),
+        dialog = DialogUtils(context = requireContext(),
             image = resourceProvider.getDrawable(R.drawable.cartoon2),
             title = resourceProvider.getString(R.string.connection_failed_title),
             description = resourceProvider.getString(R.string.connection_failed_description),
             buttonLabel = resourceProvider.getString(R.string.connection_failed_button_text),
-            onDialogButtonClick = { dialogUtils.dismiss() }
-        )
+            onDialogButtonClick = { dialog.dismiss() })
     }
 
     override fun onCreateView(
@@ -109,7 +107,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.mcvConnect.setOnClickListener {
-            dialogUtils.show()
+            dialog.show()
             viewModel.toggleConnectionStatus() // TODO("debug")
             KeyboardUtils.hideSoftKeyboard(it)
             connectIfValid(binding)

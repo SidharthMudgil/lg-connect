@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentCodeEditorBinding
-import com.sidharth.lgconnect.service.LGService
 import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
 import com.sidharth.lgconnect.util.DialogUtils
@@ -30,7 +29,6 @@ class CodeEditorFragment : Fragment() {
 
     private lateinit var resourceProvider: ResourceProvider
     private lateinit var dialog: DialogUtils
-    private var lgService: LGService? = null
     private val viewModel: ConnectionStatusViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +41,6 @@ class CodeEditorFragment : Fragment() {
             description = resourceProvider.getString(R.string.no_connection_description),
             buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),
             onDialogButtonClick = { dialog.dismiss() })
-        if (ServiceManager.getSSHService()?.isConnected == true) {
-            lgService = ServiceManager.getLGService()
-        }
     }
 
     override fun onCreateView(
@@ -89,7 +84,7 @@ class CodeEditorFragment : Fragment() {
         binding.fabSendKml.setOnClickListener {
             lifecycleScope.launch {
                 if (viewModel.connectionStatus.value == true) {
-                    lgService?.sendKml(binding.codeView.text.toString()) ?: dialog.show()
+                    ServiceManager.getLGService()?.sendKml(binding.codeView.text.toString()) ?: dialog.show()
                 } else {
                     dialog.show()
                 }

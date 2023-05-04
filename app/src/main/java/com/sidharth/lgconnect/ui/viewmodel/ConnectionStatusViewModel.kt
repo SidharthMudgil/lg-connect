@@ -14,8 +14,7 @@ class ConnectionStatusViewModel : ViewModel() {
         _connectionStatus.value = false
     }
 
-    fun toggleConnectionStatus() { // TODO("debug")
-        val currentStatus = _connectionStatus.value ?: false
-        _connectionStatus.value = !currentStatus
+    fun updateConnectionStatus(status: Boolean) {
+        _connectionStatus.postValue(status)
     }
 }

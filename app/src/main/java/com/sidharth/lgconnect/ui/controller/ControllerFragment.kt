@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentControllerBinding
-import com.sidharth.lgconnect.service.LGService
 import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
 import com.sidharth.lgconnect.util.DialogUtils
@@ -20,7 +19,6 @@ import kotlinx.coroutines.launch
 class ControllerFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
     private lateinit var dialog: DialogUtils
-    private var lgService: LGService? = null
     private val viewModel: ConnectionStatusViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,9 +30,6 @@ class ControllerFragment : Fragment() {
             description = resourceProvider.getString(R.string.no_connection_description),
             buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),
             onDialogButtonClick = { dialog.dismiss() })
-        if (ServiceManager.getSSHService()?.isConnected == true) {
-            lgService = ServiceManager.getLGService()
-        }
     }
 
     override fun onCreateView(
@@ -60,7 +55,7 @@ class ControllerFragment : Fragment() {
         binding.mcvSetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
                 execute(
-                    action = { lgService?.setRefresh() ?: dialog.show() },
+                    action = { ServiceManager.getLGService()?.setRefresh() ?: dialog.show() },
                     onFailure = { dialog.show() })
             }
         }
@@ -68,7 +63,7 @@ class ControllerFragment : Fragment() {
         binding.mcvResetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
                 execute(
-                    action = { lgService?.resetRefresh() ?: dialog.show() },
+                    action = { ServiceManager.getLGService()?.resetRefresh() ?: dialog.show() },
                     onFailure = { dialog.show() })
             }
         }
@@ -76,7 +71,7 @@ class ControllerFragment : Fragment() {
         binding.mcvClearKml.setOnClickListener {
             lifecycleScope.launch {
                 execute(
-                    action = { lgService?.clearKml() ?: dialog.show() },
+                    action = { ServiceManager.getLGService()?.clearKml() ?: dialog.show() },
                     onFailure = { dialog.show() })
             }
         }
@@ -84,7 +79,7 @@ class ControllerFragment : Fragment() {
         binding.mcvRelaunch.setOnClickListener {
             lifecycleScope.launch {
                 execute(
-                    action = { lgService?.relaunch() ?: dialog.show() },
+                    action = { ServiceManager.getLGService()?.relaunch() ?: dialog.show() },
                     onFailure = { dialog.show() })
             }
         }
@@ -92,14 +87,14 @@ class ControllerFragment : Fragment() {
         binding.mcvReboot.setOnClickListener {
             lifecycleScope.launch {
                 execute(
-                    action = { lgService?.reboot() ?: dialog.show() },
+                    action = { ServiceManager.getLGService()?.reboot() ?: dialog.show() },
                     onFailure = { dialog.show() })
             }
         }
 
         binding.mcvPowerOff.setOnClickListener {
             lifecycleScope.launch {
-                execute(action = { lgService?.powerOff() ?: dialog.show() },
+                execute(action = { ServiceManager.getLGService()?.powerOff() ?: dialog.show() },
                     onFailure = { dialog.show() })
             }
         }

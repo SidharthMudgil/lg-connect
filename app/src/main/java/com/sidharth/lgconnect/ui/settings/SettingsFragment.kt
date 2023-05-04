@@ -109,8 +109,6 @@ class SettingsFragment : Fragment() {
         }
 
         binding.mcvConnect.setOnClickListener {
-            dialog.show()
-            viewModel.toggleConnectionStatus() // TODO("debug")
             KeyboardUtils.hideSoftKeyboard(it)
             connectIfValid(binding)
         }
@@ -138,7 +136,10 @@ class SettingsFragment : Fragment() {
                     ServiceManager.initialize(context = it, sshConfig = config)
                 }
 
-                ServiceManager.getSSHService()?.connect() ?: {}
+                when (ServiceManager.getSSHService()?.connect()) {
+                    true -> viewModel.updateConnectionStatus(true)
+                    else -> viewModel.updateConnectionStatus(false)
+                }
             }
         }
     }

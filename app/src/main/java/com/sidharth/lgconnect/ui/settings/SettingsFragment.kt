@@ -131,14 +131,27 @@ class SettingsFragment : Fragment() {
                 port = binding.etPort.text.toString().trim().toInt()
             )
 
+            binding.tvLabel.text = getString(R.string.connecting)
+            binding.mcvConnect.isClickable = false
+
             lifecycleScope.launch {
                 context?.let {
+
                     ServiceManager.initialize(context = it, sshConfig = config)
                 }
 
                 when (ServiceManager.getSSHService()?.connect()) {
-                    true -> viewModel.updateConnectionStatus(true)
-                    else -> viewModel.updateConnectionStatus(false)
+                    true -> {
+                        viewModel.updateConnectionStatus(true)
+                        binding.tvLabel.text = getString(R.string.connect)
+                        binding.mcvConnect.isClickable = true
+                    }
+                    else -> {
+                        viewModel.updateConnectionStatus(false)
+                        binding.tvLabel.text = getString(R.string.connect)
+                        binding.mcvConnect.isClickable = true
+                        dialog.show()
+                    }
                 }
             }
         }

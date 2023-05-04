@@ -129,6 +129,7 @@ class HomeFragment : Fragment(), OnItemClickCallback {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 viewModel.markers.value?.get(viewHolder.adapterPosition)
                     ?.let { viewModel.deleteMarker(it) }
+                binding.rvMarkers.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
             }
 
         }

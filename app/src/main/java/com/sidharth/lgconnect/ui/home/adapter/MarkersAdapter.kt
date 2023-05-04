@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.databinding.ItemCardMarkerBinding
+import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -18,6 +18,7 @@ class MarkersAdapter(
     private val markers: List<Marker>,
     private val resourceProvider: ResourceProvider,
     private val lifecycleScope: LifecycleCoroutineScope,
+    private val onItemClickCallback: OnItemClickCallback,
 ) : RecyclerView.Adapter<MarkersAdapter.MarkerHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarkerHolder {
         val binding = ItemCardMarkerBinding.inflate(
@@ -31,7 +32,13 @@ class MarkersAdapter(
     }
 
     override fun onBindViewHolder(holder: MarkerHolder, position: Int) {
-        holder.bind(context, markers[position], resourceProvider, lifecycleScope)
+        holder.bind(
+            context,
+            markers[position],
+            resourceProvider,
+            lifecycleScope,
+            onItemClickCallback
+        )
     }
 
     class MarkerHolder(private val itemBinding: ItemCardMarkerBinding) :
@@ -40,7 +47,8 @@ class MarkersAdapter(
             context: Context,
             marker: Marker,
             resourceProvider: ResourceProvider,
-            lifecycleScope: LifecycleCoroutineScope
+            lifecycleScope: LifecycleCoroutineScope,
+            onItemClickCallback: OnItemClickCallback,
         ) {
             itemBinding.sivMarkerIcon.setImageDrawable(
                 resourceProvider.getDrawable(marker.icon)
@@ -50,11 +58,11 @@ class MarkersAdapter(
             itemBinding.tvMarkerSubtitle.text = marker.subtitle
 
             itemBinding.mcvMarkerCard.setOnClickListener {
-//                lifecycleScope.launch {
-//                    ServiceManager.getLGService()?.createMarker(marker) ?: DialogUtils.show(context) {
-//
-//                    }
-//                }
+                onItemClickCallback.onClick {
+                    lifecycleScope.launch {
+                        ServiceManager.getLGService()?.createMarker(marker)
+                    }
+                }
             }
 
             itemBinding.mcvMarkerCard.setOnLongClickListener {

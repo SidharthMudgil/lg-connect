@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.databinding.ItemCardChartBinding
+import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -18,6 +18,7 @@ class ChartsAdapter(
     private val charts: List<Chart>,
     private val resourceProvider: ResourceProvider,
     private val lifecycleScope: LifecycleCoroutineScope,
+    private val onItemClickCallback: OnItemClickCallback,
 ) : RecyclerView.Adapter<ChartsAdapter.ChartHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChartHolder {
         val binding = ItemCardChartBinding.inflate(
@@ -32,7 +33,9 @@ class ChartsAdapter(
     }
 
     override fun onBindViewHolder(holder: ChartHolder, position: Int) {
-        holder.bind(context, charts[position], resourceProvider, lifecycleScope)
+        holder.bind(
+            context, charts[position], resourceProvider, lifecycleScope, onItemClickCallback
+        )
     }
 
     class ChartHolder(private val itemBinding: ItemCardChartBinding) :
@@ -41,19 +44,19 @@ class ChartsAdapter(
             context: Context,
             chart: Chart,
             resourceProvider: ResourceProvider,
-            lifecycleScope: LifecycleCoroutineScope
+            lifecycleScope: LifecycleCoroutineScope,
+            onItemClickCallback: OnItemClickCallback,
         ) {
             itemBinding.ivChartCover.setImageDrawable(
                 resourceProvider.getDrawable(chart.cover)
             )
 
             itemBinding.mcvChartCard.setOnClickListener {
-//                lifecycleScope.launch {
-//                    ServiceManager.getLGService()?.createChart(chart.type)
-//                        ?: DialogUtils.show(context) {
-//
-//                        }
-//                }
+                onItemClickCallback.onClick {
+                    lifecycleScope.launch {
+                        ServiceManager.getLGService()?.createChart(chart.type)
+                    }
+                }
             }
 
             itemBinding.mcvChartCard.setOnLongClickListener {

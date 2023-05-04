@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import com.sidharth.lgconnect.domain.model.Wonder
 import com.sidharth.lgconnect.databinding.ItemCardWonderBinding
+import com.sidharth.lgconnect.domain.model.Wonder
 import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -19,6 +19,7 @@ class WondersAdapter(
     private val wonders: List<Wonder>,
     private val resourceProvider: ResourceProvider,
     private val lifecycleScope: LifecycleCoroutineScope,
+    private val onItemClickCallback: OnItemClickCallback,
 ) : Adapter<WondersAdapter.WonderHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WonderHolder {
         val binding = ItemCardWonderBinding.inflate(
@@ -34,7 +35,13 @@ class WondersAdapter(
     }
 
     override fun onBindViewHolder(holder: WonderHolder, position: Int) {
-        holder.bind(context, wonders[position], resourceProvider, lifecycleScope)
+        holder.bind(
+            context,
+            wonders[position],
+            resourceProvider,
+            lifecycleScope,
+            onItemClickCallback
+        )
     }
 
     class WonderHolder(private val itemBinding: ItemCardWonderBinding) :
@@ -44,19 +51,19 @@ class WondersAdapter(
             context: Context,
             wonder: Wonder,
             resourceProvider: ResourceProvider,
-            lifecycleScope: LifecycleCoroutineScope
+            lifecycleScope: LifecycleCoroutineScope,
+            onItemClickCallback: OnItemClickCallback,
         ) {
             itemBinding.ivWonderCover.setImageDrawable(
                 resourceProvider.getDrawable(wonder.cover)
             )
 
             itemBinding.mcvWonderCard.setOnClickListener {
-//                lifecycleScope.launch {
-//                    ServiceManager.getLGService()?.flyToAndOrbit(wonder.latLng)
-//                        ?: DialogUtils.show(context) {
-//
-//                        }
-//                }
+                onItemClickCallback.onClick {
+                    lifecycleScope.launch {
+                        ServiceManager.getLGService()?.flyToAndOrbit(wonder.latLng)
+                    }
+                }
             }
 
             itemBinding.mcvWonderCard.setOnLongClickListener {

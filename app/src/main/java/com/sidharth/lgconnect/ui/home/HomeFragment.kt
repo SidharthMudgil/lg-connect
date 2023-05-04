@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.sidharth.lgconnect.R
+import com.sidharth.lgconnect.data.local.AppDatabase
+import com.sidharth.lgconnect.data.local.LocalDataSourceImpl
 import com.sidharth.lgconnect.data.repository.DataRepositoryImpl
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
@@ -33,10 +35,39 @@ class HomeFragment : Fragment(), OnItemClickCallback {
     private lateinit var resourceProvider: ResourceProvider
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory(
-            GetHomeDataUseCaseImpl(DataRepositoryImpl),
-            GetMarkersUseCaseImpl(DataRepositoryImpl),
-            DeleteMarkerUseCaseImpl(DataRepositoryImpl),
-            AddObserverUseCaseImpl(DataRepositoryImpl)
+            GetHomeDataUseCaseImpl(
+                DataRepositoryImpl(
+                    LocalDataSourceImpl(
+                        AppDatabase.getDatabase(
+                            requireContext()
+                        ).markerDao()
+                    )
+                )
+            ), GetMarkersUseCaseImpl(
+                DataRepositoryImpl(
+                    LocalDataSourceImpl(
+                        AppDatabase.getDatabase(
+                            requireContext()
+                        ).markerDao()
+                    )
+                )
+            ), DeleteMarkerUseCaseImpl(
+                DataRepositoryImpl(
+                    LocalDataSourceImpl(
+                        AppDatabase.getDatabase(
+                            requireContext()
+                        ).markerDao()
+                    )
+                )
+            ), AddObserverUseCaseImpl(
+                DataRepositoryImpl(
+                    LocalDataSourceImpl(
+                        AppDatabase.getDatabase(
+                            requireContext()
+                        ).markerDao()
+                    )
+                )
+            )
         )
     }
     private val connectionStatusViewModel: ConnectionStatusViewModel by activityViewModels()

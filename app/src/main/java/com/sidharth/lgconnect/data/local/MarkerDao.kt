@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface MarkerDao {
     @Query("SELECT * FROM markers")
-    fun getAllMarkers(): List<MarkerEntity>
+    suspend fun getAllMarkers(): List<MarkerEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMarker(marker: MarkerEntity)

@@ -16,6 +16,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.sidharth.lgconnect.R
+import com.sidharth.lgconnect.data.local.AppDatabase
+import com.sidharth.lgconnect.data.local.LocalDataSourceImpl
 import com.sidharth.lgconnect.data.mapper.MarkerMapper
 import com.sidharth.lgconnect.data.repository.DataRepositoryImpl
 import com.sidharth.lgconnect.domain.usecase.AddMarkerUseCaseImpl
@@ -30,9 +32,31 @@ import com.sidharth.lgconnect.util.NetworkUtils
 class MapsFragment : Fragment() {
     private val viewModel: MapsViewModel by viewModels {
         MapsViewModelFactory(
-            GetMarkersUseCaseImpl(DataRepositoryImpl),
-            AddMarkerUseCaseImpl(DataRepositoryImpl),
-            AddObserverUseCaseImpl(DataRepositoryImpl)
+            GetMarkersUseCaseImpl(
+                DataRepositoryImpl(
+                    LocalDataSourceImpl(
+                        AppDatabase.getDatabase(
+                            requireContext()
+                        ).markerDao()
+                    )
+                )
+            ), AddMarkerUseCaseImpl(
+                DataRepositoryImpl(
+                    LocalDataSourceImpl(
+                        AppDatabase.getDatabase(
+                            requireContext()
+                        ).markerDao()
+                    )
+                )
+            ), AddObserverUseCaseImpl(
+                DataRepositoryImpl(
+                    LocalDataSourceImpl(
+                        AppDatabase.getDatabase(
+                            requireContext()
+                        ).markerDao()
+                    )
+                )
+            )
         )
     }
     private lateinit var dialog: DialogUtils
@@ -65,7 +89,7 @@ class MapsFragment : Fragment() {
             context?.let { ctx ->
                 if (NetworkUtils.isNetworkConnected(ctx)) {
                     val marker =
-                        MarkerMapper(ctx).mapAddressToMarker(latLng.latitude, latLng.longitude)
+                        MarkerMapper.mapAddressToMarker(ctx, latLng.latitude, latLng.longitude)
 
                     marker?.let { mkr ->
                         vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))

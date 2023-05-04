@@ -7,10 +7,10 @@ import com.sidharth.lgconnect.data.local.MarkerEntity
 import com.sidharth.lgconnect.domain.model.Marker
 import java.util.Locale
 
-class MarkerMapper(private val context: Context) {
+object MarkerMapper {
 
     @Suppress("DEPRECATION")
-    fun mapAddressToMarker(latitude: Double, longitude: Double): Marker? {
+    fun mapAddressToMarker(context: Context, latitude: Double, longitude: Double): Marker? {
         val geocoder = Geocoder(context, Locale.getDefault())
         val addressList = geocoder.getFromLocation(latitude, longitude, 1)
 

@@ -59,31 +59,41 @@ class ControllerFragment : Fragment() {
 
         binding.mcvSetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
-                execute(action = { lgService?.setRefresh() }, onFailure = { dialog.show() })
+                execute(
+                    action = { lgService?.setRefresh() ?: dialog.show() },
+                    onFailure = { dialog.show() })
             }
         }
 
         binding.mcvResetSlaveRefresh.setOnClickListener {
             lifecycleScope.launch {
-                execute(action = { lgService?.resetRefresh() }, onFailure = { dialog.show() })
+                execute(
+                    action = { lgService?.resetRefresh() ?: dialog.show() },
+                    onFailure = { dialog.show() })
             }
         }
 
         binding.mcvClearKml.setOnClickListener {
             lifecycleScope.launch {
-                execute(action = { lgService?.clearKml() }, onFailure = { dialog.show() })
+                execute(
+                    action = { lgService?.clearKml() ?: dialog.show() },
+                    onFailure = { dialog.show() })
             }
         }
 
         binding.mcvRelaunch.setOnClickListener {
             lifecycleScope.launch {
-                execute(action = { lgService?.relaunch() }, onFailure = { dialog.show() })
+                execute(
+                    action = { lgService?.relaunch() ?: dialog.show() },
+                    onFailure = { dialog.show() })
             }
         }
 
         binding.mcvReboot.setOnClickListener {
             lifecycleScope.launch {
-                execute(action = { lgService?.reboot() }, onFailure = { dialog.show() })
+                execute(
+                    action = { lgService?.reboot() ?: dialog.show() },
+                    onFailure = { dialog.show() })
             }
         }
 

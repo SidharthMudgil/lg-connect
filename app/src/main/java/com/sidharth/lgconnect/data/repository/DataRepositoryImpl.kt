@@ -36,14 +36,14 @@ class DataRepositoryImpl(private val localDataSource: LocalDataSource) : DataRep
     }
 
     override suspend fun addMarker(marker: Marker) {
-        markers.add(marker)
         localDataSource.addMarker(marker)
+        markers.add(marker)
         notifyObservers()
     }
 
     override suspend fun deleteMarker(marker: Marker) {
-        markers.remove(marker)
         localDataSource.deleteMarker(marker)
+        markers.remove(marker)
         notifyObservers()
     }
 

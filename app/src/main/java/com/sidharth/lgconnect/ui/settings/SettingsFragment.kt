@@ -136,7 +136,6 @@ class SettingsFragment : Fragment() {
 
             lifecycleScope.launch {
                 context?.let {
-
                     ServiceManager.initialize(context = it, sshConfig = config)
                 }
 

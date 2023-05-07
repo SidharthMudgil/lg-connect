@@ -34,10 +34,11 @@ object NetworkUtils {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val networkRequest =
-            NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+        val networkRequest = NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET).build()
+                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                .build()
 
         val callback = NetworkConnectivityCallback(onConnectionAvailable, onConnectionLost)
         connectivityManager.registerNetworkCallback(networkRequest, callback)

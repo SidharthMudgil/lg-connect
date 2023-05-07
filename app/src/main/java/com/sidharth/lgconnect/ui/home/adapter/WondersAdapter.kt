@@ -61,7 +61,7 @@ class WondersAdapter(
             itemBinding.mcvWonderCard.setOnClickListener {
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
-                        ServiceManager.getLGService()?.flyToAndOrbit(wonder.latLng)
+                        ServiceManager.getLGService()?.flyTo(wonder.title)
                             ?: ServiceManager.showNoConnectionDialog()
                     }
                 }

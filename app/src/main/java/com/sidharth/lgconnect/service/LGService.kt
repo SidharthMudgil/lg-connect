@@ -1,24 +1,46 @@
 package com.sidharth.lgconnect.service
 
-import com.google.android.gms.maps.model.LatLng
 import com.sidharth.lgconnect.domain.model.Marker
+import kotlinx.coroutines.runBlocking
 
 class LGService(
     private val sshService: SSHService,
     private val fileService: FileService,
 ) {
-    val totalScreens = 5
+    private var totalScreens = 5
+
+    private val leftScreen: Int
+        get() {
+            return when (totalScreens) {
+                1 -> 1
+                else -> totalScreens / 2 + 2
+            }
+        }
+
+    private val rightScreen: Int
+        get() {
+            return when (totalScreens) {
+                1 -> 1
+                else -> totalScreens / 2 + 1
+            }
+        }
+
+    init {
+        runBlocking {
+            totalScreens = Integer.parseInt(getScreenAmount())
+        }
+    }
 
     suspend fun setRefresh() {
-        val search = "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href>";
+        val search = "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href>"
         val replace =
-            "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href><refreshMode>onInterval<\\/refreshMode><refreshInterval>2<\\/refreshInterval>";
+            "<href>##LG_PHPIFACE##kml\\/slave_{{slave}}.kml<\\/href><refreshMode>onInterval<\\/refreshMode><refreshInterval>2<\\/refreshInterval>"
 
         val setCommand =
-            "echo ${sshService.passwordOrKey} | sudo -S sed -i \"s/$search/$replace/\" ~/earth/kml/slave/myplaces.kml";
+            "echo ${sshService.passwordOrKey} | sudo -S sed -i \"s/$search/$replace/\" ~/earth/kml/slave/myplaces.kml"
 
         val clearCommand =
-            "echo ${sshService.passwordOrKey} | sudo -S sed -i \"s/$replace/$search/\" ~/earth/kml/slave/myplaces.kml";
+            "echo ${sshService.passwordOrKey} | sudo -S sed -i \"s/$replace/$search/\" ~/earth/kml/slave/myplaces.kml"
 
         for (i in 2..totalScreens) {
             val clearCmd = clearCommand.replace("{{slave}}", i.toString())
@@ -39,7 +61,7 @@ class LGService(
             "echo ${sshService.passwordOrKey} | sudo -S sed -i \"s/$search/$replace/\" ~/earth/kml/slave/myplaces.kml"
 
         for (i in 2..totalScreens) {
-            val cmd = clear.replace("{{slave}}", i.toString());
+            val cmd = clear.replace("{{slave}}", i.toString())
             sshService.execute("sshpass -p ${sshService.passwordOrKey} ssh -t lg$i \'$cmd\'")
         }
 
@@ -55,7 +77,7 @@ class LGService(
             </kml>
         """.trimIndent()
 
-        var query = "echo \"exittour=true\" > /tmp/query.txt && > /var/www/html/kmls.txt"
+        var query = "echo 'exittour=true' > /tmp/query.txt && > /var/www/html/kmls.txt"
 
         for (i in 2..totalScreens) {
             val blankKml = blank.replace("{{id}}", "slave_$i")
@@ -78,12 +100,12 @@ class LGService(
             else
               exit 1
             fi
-            if  [[ \\\$(service \\${'$'}SERVICE status) =~ 'stop' ]]; then
-              echo \\${sshService.passwordOrKey} | sudo -S service \\${'$'}{SERVICE} start
+            if  [[ $(service ${'$'}SERVICE status) =~ 'stop' ]]; then
+              echo ${sshService.passwordOrKey} | sudo -S service ${'$'}{SERVICE} start
             else
-              echo \\${sshService.passwordOrKey} | sudo -S service \\${'$'}{SERVICE} restart
+              echo ${sshService.passwordOrKey} | sudo -S service ${'$'}{SERVICE} restart
             fi
-            " && sshpass -p \\${sshService.passwordOrKey} ssh -x -t lg@lg\$i "\${'$'}RELAUNCH_CMD\"
+            " && sshpass -p ${sshService.passwordOrKey} ssh -x -t lg@lg\$i "${'$'}RELAUNCH_CMD\"
         """.trimIndent()
 
             sshService.execute("\"/home/${sshService.user}/bin/lg-relaunch\" > /home/${sshService.user}/log.txt")
@@ -104,43 +126,61 @@ class LGService(
         }
     }
 
-    suspend fun setLogos() {
-        val kml: String = ""
-        sendKml(kml)
+    suspend fun flyTo(name: String) {
+        sshService.execute("echo 'search=${name}' > /tmp/query.txt`)")
     }
 
-    suspend fun sendKml(data: String) {
-
+    suspend fun changePlanet(name: String) {
+        sshService.execute("echo 'planet=${name}' > /tmp/query.txt")
     }
 
-    suspend fun createChart(type: String) {
+    suspend fun startOrbit() {
+        sshService.execute("echo 'playtour=Orbit' > /tmp/query.txt")
+    }
+
+    suspend fun stopOrbit() {
+        sshService.execute("echo 'exittour=true' > /tmp/query.txt")
+    }
+
+    private suspend fun getScreenAmount(): String {
+        val out = sshService.execute("grep -oP '(?<=DHCP_LG_FRAMES_MAX=).*' personavars.txt")
+        return out[0]
+    }
+
+    suspend fun createShowChart(type: String) {
         val kml = KMLService.createChartKML(type)
         sendKml(kml)
     }
 
-    suspend fun changePlanet(name: String) {
-        val kml: String = ""
-        sendKml(kml)
-    }
-
-    suspend fun createMarker(marker: Marker) {
+    suspend fun createShowMarker(marker: Marker) {
         KMLService.createMarker(marker)
         val kml: String = ""
         sendKml(kml)
     }
 
-    suspend fun flyTo(latLng: LatLng) {
-        val kml: String = ""
-        sendKml(kml)
+    suspend fun setLogo() {
+        val kml: String = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+            <Document id ="logo">
+                <name>LG Connect</name>
+                <Folder>
+                    <name>Logos</name>
+                    <ScreenOverlay>
+                    <name>Logo</name>
+                    <Icon><href>https://i.imgur.com/6BgpZq7.png</href> </Icon>
+                    <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+                    <screenXY x="0.02" y="0.95" xunits="fraction" yunits="fraction"/>
+                    <rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+                    <size x="0.6" y="0.4" xunits="fraction" yunits="fraction"/>
+                    </ScreenOverlay>
+                </Folder>
+            </Document>
+        </kml>""".trimIndent()
+        sshService.execute("echo '${kml}' > /var/www/html/kml/slave_$leftScreen.kml")
     }
 
-    private suspend fun orbit(latLng: LatLng) {
-        val kml: String = ""
-        sendKml(kml)
-    }
+    suspend fun sendKml(data: String) {
 
-    suspend fun flyToAndOrbit(latLng: LatLng) {
-        flyTo(latLng)
-        orbit(latLng)
     }
 }

@@ -56,7 +56,7 @@ class MarkersAdapter(
             itemBinding.mcvMarkerCard.setOnClickListener {
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
-                        ServiceManager.getLGService()?.createMarker(marker)
+                        ServiceManager.getLGService()?.createShowMarker(marker)
                             ?: ServiceManager.showNoConnectionDialog()
                     }
                 }

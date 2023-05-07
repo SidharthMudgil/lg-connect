@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -27,7 +28,7 @@ import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.NetworkUtils
 
 
-class MapsFragment : Fragment() {
+class MapsFragment : Fragment(), OnMapLongClickListener {
     private val viewModel: MapsViewModel by viewModels {
         MapsViewModelFactory(
             GetMarkersUseCaseImpl(
@@ -42,6 +43,7 @@ class MapsFragment : Fragment() {
         )
     }
     private lateinit var dialog: DialogUtils
+    private lateinit var vibrator: Vibrator
 
     private val callback = OnMapReadyCallback { googleMap ->
         googleMap.setMapStyle(context?.let {
@@ -65,23 +67,7 @@ class MapsFragment : Fragment() {
             }
         }
 
-        val vibrator = context?.getSystemService(Vibrator::class.java)
-
-        googleMap.setOnMapLongClickListener { latLng ->
-            context?.let { ctx ->
-                if (NetworkUtils.isNetworkConnected(ctx)) {
-                    val marker =
-                        MarkerMapper.mapAddressToMarker(ctx, latLng.latitude, latLng.longitude)
-
-                    marker?.let { mkr ->
-                        vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
-                        viewModel.addMarker(mkr)
-                    }
-                } else {
-                    dialog.show()
-                }
-            }
-        }
+        googleMap.setOnMapLongClickListener(this)
     }
 
     override fun onCreateView(
@@ -93,8 +79,11 @@ class MapsFragment : Fragment() {
             title = getString(R.string.no_network_title),
             description = getString(R.string.no_network_description),
             buttonLabel = getString(R.string.no_network_button_text),
-            showButton = false
+            onDialogButtonClick = {
+                dialog.dismiss()
+            }
         )
+        vibrator = requireContext().getSystemService(Vibrator::class.java)
 
         NetworkUtils.startNetworkCallback(context = requireContext(), onConnectionLost = {
             dialog.show()
@@ -109,5 +98,26 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        NetworkUtils.stopNetworkCallback(requireContext())
+    }
+
+    override fun onMapLongClick(latLng: LatLng) {
+        if (NetworkUtils.isNetworkConnected(requireContext())) {
+            val marker = MarkerMapper.mapAddressToMarker(
+                context = requireContext(),
+                latitude = latLng.latitude,
+                longitude = latLng.longitude
+            )
+            marker?.let { mkr ->
+                vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
+                viewModel.addMarker(mkr)
+            }
+        } else {
+            dialog.show()
+        }
     }
 }

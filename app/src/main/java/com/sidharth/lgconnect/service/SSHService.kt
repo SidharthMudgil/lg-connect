@@ -99,11 +99,11 @@ class SSHService(
         }
     }
 
-    suspend fun upload(data: String, remotePath: String): Boolean {
+    suspend fun upload(from: String, to: String): Boolean {
         return withContext(Dispatchers.IO) {
             val sftp = ssh.newSFTPClient()
             try {
-                sftp.put(data, remotePath)
+                sftp.put(from, to)
                 true
             } catch (e: SFTPException) {
                 e.printStackTrace()

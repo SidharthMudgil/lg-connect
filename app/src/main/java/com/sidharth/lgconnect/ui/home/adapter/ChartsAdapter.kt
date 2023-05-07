@@ -54,7 +54,7 @@ class ChartsAdapter(
             itemBinding.mcvChartCard.setOnClickListener {
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
-                        ServiceManager.getLGService()?.createChart(chart.type)
+                        ServiceManager.getLGService()?.createShowChart(chart.type)
                             ?: ServiceManager.showNoConnectionDialog()
                     }
                 }

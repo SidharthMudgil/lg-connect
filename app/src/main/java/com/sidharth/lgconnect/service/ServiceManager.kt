@@ -47,12 +47,7 @@ object ServiceManager {
         initializeDialog(context)
         contextRef = WeakReference(context.applicationContext)
         fileService = FileService(context)
-        sshService = SSHService(
-            hostname = sshConfig.hostname,
-            port = sshConfig.port,
-            username = sshConfig.username,
-            password = sshConfig.password
-        )
+        sshService = SSHService(sshConfig)
         lgService = LGService(sshService!!, fileService!!)
     }
 

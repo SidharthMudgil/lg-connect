@@ -126,6 +126,9 @@ class LGService(
         }
     }
 
+    //    '1492.665945696469',
+//        '45',
+//        '0'
     suspend fun flyTo(name: String) {
         sshService.execute("echo 'search=${name}' > /tmp/query.txt`)")
     }
@@ -149,38 +152,20 @@ class LGService(
 
     suspend fun createShowChart(type: String) {
         val kml = KMLService.createChartKML(type)
-        sendKml(kml)
+        sshService.execute("") // TODO(enter command)
     }
 
     suspend fun createShowMarker(marker: Marker) {
-        KMLService.createMarker(marker)
-        val kml: String = ""
-        sendKml(kml)
+        val kml: String = KMLService.createMarker(marker)
+        sshService.execute("") // TODO(enter command)
     }
 
     suspend fun setLogo() {
-        val kml: String = """
-        <?xml version="1.0" encoding="UTF-8"?>
-        <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
-            <Document id ="logo">
-                <name>LG Connect</name>
-                <Folder>
-                    <name>Logos</name>
-                    <ScreenOverlay>
-                    <name>Logo</name>
-                    <Icon><href>https://i.imgur.com/6BgpZq7.png</href> </Icon>
-                    <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
-                    <screenXY x="0.02" y="0.95" xunits="fraction" yunits="fraction"/>
-                    <rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
-                    <size x="0.6" y="0.4" xunits="fraction" yunits="fraction"/>
-                    </ScreenOverlay>
-                </Folder>
-            </Document>
-        </kml>""".trimIndent()
+        val kml: String = KMLService.createLogo("https://i.imgur.com/6BgpZq7.png")
         sshService.execute("echo '${kml}' > /var/www/html/kml/slave_$leftScreen.kml")
     }
 
-    suspend fun sendKml(data: String) {
-
+    suspend fun sendKml(kml: String) {
+        sshService.execute("") // TODO(enter command)
     }
 }

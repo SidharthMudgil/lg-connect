@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener
@@ -29,7 +30,7 @@ import com.sidharth.lgconnect.util.NetworkUtils
 
 
 class MapsFragment : Fragment(), OnMapLongClickListener {
-    private val viewModel: MapsViewModel by viewModels {
+    private val viewModel: MapsViewModel by activityViewModels {
         MapsViewModelFactory(
             GetMarkersUseCaseImpl(
                 AppRepository.getInstance(requireContext())

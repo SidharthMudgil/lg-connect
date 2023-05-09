@@ -34,7 +34,7 @@ import com.sidharth.lgconnect.util.ResourceProvider
 
 class HomeFragment : Fragment(), OnItemClickCallback {
     private lateinit var resourceProvider: ResourceProvider
-    private val viewModel: HomeViewModel by viewModels {
+    private val viewModel: HomeViewModel by activityViewModels {
         HomeViewModelFactory(
             GetHomeDataUseCaseImpl(AppRepository.getInstance(requireContext())),
             GetMarkersUseCaseImpl(

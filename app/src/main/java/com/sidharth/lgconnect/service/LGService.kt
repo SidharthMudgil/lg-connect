@@ -152,7 +152,7 @@ class LGService(
 
     suspend fun createShowChart(type: String) {
         val kml = KMLService.createChartKML(type)
-        sshService.execute("") // TODO(enter command)
+        sshService.execute("echo '${kml}' > /var/www/html/kml/slave_${rightScreen}.kml")
     }
 
     suspend fun createShowMarker(marker: Marker) {

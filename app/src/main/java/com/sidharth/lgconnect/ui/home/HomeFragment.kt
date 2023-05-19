@@ -114,17 +114,27 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvWonders)
 
+        binding.rvMarkers.visibility = View.GONE
+        binding.label.visibility = View.GONE
         viewModel.markers.observe(viewLifecycleOwner) { markers ->
-            binding.rvMarkers.adapter = context?.let { ctx ->
-                MarkersAdapter(
-                    context = ctx,
-                    markers = markers,
-                    resourceProvider = resourceProvider,
-                    lifecycleScope = lifecycleScope,
-                    onItemClickCallback = this,
-                )
+            if (markers.isEmpty()) {
+                binding.rvMarkers.visibility = View.GONE
+                binding.label.visibility = View.GONE
+            } else {
+                binding.rvMarkers.visibility = View.VISIBLE
+                binding.label.visibility = View.VISIBLE
+
+                binding.rvMarkers.adapter = context?.let { ctx ->
+                    MarkersAdapter(
+                        context = ctx,
+                        markers = markers,
+                        resourceProvider = resourceProvider,
+                        lifecycleScope = lifecycleScope,
+                        onItemClickCallback = this,
+                    )
+                }
+                binding.rvMarkers.adapter?.notifyDataSetChanged()
             }
-            binding.rvMarkers.adapter?.notifyDataSetChanged()
         }
         binding.rvMarkers.layoutManager = LinearLayoutManager(
             context, LinearLayoutManager.VERTICAL, false

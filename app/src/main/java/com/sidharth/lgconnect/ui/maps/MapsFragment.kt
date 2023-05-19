@@ -27,6 +27,7 @@ import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModel
 import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModelFactory
 import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.NetworkUtils
+import com.sidharth.lgconnect.util.ToastUtils
 
 
 class MapsFragment : Fragment(), OnMapLongClickListener {
@@ -115,6 +116,7 @@ class MapsFragment : Fragment(), OnMapLongClickListener {
             )
             marker?.let { mkr ->
                 vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
+                ToastUtils.showToast(requireContext(), "${mkr.title} added")
                 viewModel.addMarker(mkr)
             }
         } else {

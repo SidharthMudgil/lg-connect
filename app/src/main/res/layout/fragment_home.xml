@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/card_search" />
+        <include
+            android:id="@+id/search_layout"
+            layout="@layout/card_search" />
 
         <TextView
             android:layout_width="wrap_content"

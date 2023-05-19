@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +30,7 @@ import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModelFactory
 import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
 import com.sidharth.lgconnect.util.DialogUtils
 import com.sidharth.lgconnect.util.ResourceProvider
+import com.sidharth.lgconnect.util.ToastUtils
 
 class HomeFragment : Fragment(), OnItemClickCallback {
     private lateinit var resourceProvider: ResourceProvider
@@ -67,6 +67,10 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val binding: FragmentHomeBinding = FragmentHomeBinding.inflate(inflater)
+
+        binding.searchLayout.mcvSearch.setOnClickListener {
+            ToastUtils.showToast(requireContext(), "Coming soon...")
+        }
 
         binding.rvPlanets.layoutManager = LinearLayoutManager(
             context, LinearLayoutManager.HORIZONTAL, false
@@ -128,7 +132,10 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 viewModel.markers.value?.get(viewHolder.adapterPosition)
-                    ?.let { viewModel.deleteMarker(it) }
+                    ?.let {
+                        ToastUtils.showToast(requireContext(), "${it.title} deleted")
+                        viewModel.deleteMarker(it)
+                    }
                 binding.rvMarkers.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
             }
 

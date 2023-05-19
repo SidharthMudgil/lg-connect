@@ -1,6 +1,7 @@
 package com.sidharth.lgconnect.service
 
 import com.sidharth.lgconnect.domain.model.Marker
+import com.sidharth.lgconnect.domain.model.Wonder
 import kotlinx.coroutines.runBlocking
 
 class LGService(
@@ -129,8 +130,8 @@ class LGService(
     //    '1492.665945696469',
 //        '45',
 //        '0'
-    suspend fun flyTo(name: String) {
-        sshService.execute("echo 'search=${name}' > /tmp/query.txt`)")
+    suspend fun flyTo(wonder: Wonder) {
+        sshService.execute("echo 'search=${wonder.title}' > /tmp/query.txt`)")
     }
 
     suspend fun changePlanet(name: String) {

@@ -1,6 +1,7 @@
 package com.sidharth.lgconnect.service
 
 import com.sidharth.lgconnect.domain.model.Marker
+import com.sidharth.lgconnect.domain.model.Wonder
 
 object KMLService {
     fun createChartKML(type: String): String {
@@ -38,6 +39,27 @@ object KMLService {
 
     private fun createRadarChartKML(): String {
         return ""
+    }
+
+    fun lookAt(wonder: Wonder): String {
+        return """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <Placemark>
+                  <name>${wonder.title}</name>
+                  <LookAt>
+                    <longitude>${wonder.latLng.longitude}</longitude>
+                    <latitude>${wonder.latLng.latitude}</latitude>
+                    <altitude>0</altitude>
+                    <heading>0</heading>
+                    <tilt>0</tilt>
+                    <range>5000</range>
+                  </LookAt>
+                </Placemark>
+              </Document>
+            </kml>
+        """.trimIndent()
     }
 
     fun createLogo(url: String): String {

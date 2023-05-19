@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity() {
             .hide(controllerFragment).add(R.id.fragment_container, settingsFragment, "settings")
             .hide(settingsFragment).commit()
 
+        activeFragment = switchFragment(homeFragment, activeFragment)
+
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {

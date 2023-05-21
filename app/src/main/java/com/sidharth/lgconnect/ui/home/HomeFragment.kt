@@ -114,16 +114,13 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvWonders)
 
-        binding.rvMarkers.visibility = View.GONE
-        binding.label.visibility = View.GONE
         viewModel.markers.observe(viewLifecycleOwner) { markers ->
             if (markers.isEmpty()) {
                 binding.rvMarkers.visibility = View.GONE
-                binding.label.visibility = View.GONE
+                binding.mcvNoMarkers.visibility = View.VISIBLE
             } else {
+                binding.mcvNoMarkers.visibility = View.GONE
                 binding.rvMarkers.visibility = View.VISIBLE
-                binding.label.visibility = View.VISIBLE
-
                 binding.rvMarkers.adapter = context?.let { ctx ->
                     MarkersAdapter(
                         context = ctx,
@@ -141,11 +138,10 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         )
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                viewModel.markers.value?.get(viewHolder.adapterPosition)
-                    ?.let {
-                        ToastUtils.showToast(requireContext(), "${it.title} deleted")
-                        viewModel.deleteMarker(it)
-                    }
+                viewModel.markers.value?.get(viewHolder.adapterPosition)?.let {
+                    ToastUtils.showToast(requireContext(), "${it.title} deleted")
+                    viewModel.deleteMarker(it)
+                }
                 binding.rvMarkers.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
             }
 

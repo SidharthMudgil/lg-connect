@@ -40,4 +40,5 @@
     <string name="no_connection_description">You are not currently connected to the liquid galaxy. Please make sure you have established an SSH connection and try again.</string>
     <string name="no_connection_button_text">OK</string>
     <string name="connecting">Connecting...</string>
+    <string name="no_markers_found">No markers found</string>
 </resources>

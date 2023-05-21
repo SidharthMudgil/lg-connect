@@ -53,9 +53,9 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textStyle="bold"
                 android:textColor="@color/grey_100"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 tools:text="Aesop Silver Lake" />
 
             <TextView

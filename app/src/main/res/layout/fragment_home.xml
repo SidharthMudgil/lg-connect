@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -108,7 +109,42 @@
             android:layout_marginEnd="@dimen/home_side_margin"
             android:minHeight="400dp"
             android:orientation="vertical"
+            android:visibility="gone"
+            tools:itemCount="5"
             tools:listitem="@layout/item_card_marker" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_no_markers"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginStart="@dimen/home_side_margin"
+            android:layout_marginEnd="@dimen/home_side_margin"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/grey_700"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/grey_500"
+            app:strokeWidth="1dp">
+
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/empty" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_margin="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/no_markers_found"
+                android:textColor="@color/grey_400" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

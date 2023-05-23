@@ -74,25 +74,24 @@
 
                 <EditText
                     android:id="@+id/et_search"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:autofillHints="@null"
                     android:background="@null"
                     android:gravity="center_vertical|start"
                     android:hint="@string/search"
+                    android:inputType="text"
                     android:textSize="18sp"
-                    android:autofillHints="@null"
-                    android:inputType="text" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp" />
 
                 <ImageView
                     android:id="@+id/iv_search"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@null"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_search" />

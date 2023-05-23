@@ -1,6 +1,7 @@
 package com.sidharth.lgconnect.ui.home
 
 import android.annotation.SuppressLint
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.model.LatLng
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.data.repository.AppRepository
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
+import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
+import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.home.adapter.ChartsAdapter
 import com.sidharth.lgconnect.ui.home.adapter.MarkersAdapter
 import com.sidharth.lgconnect.ui.home.adapter.PlanetAdapter
@@ -29,8 +33,12 @@ import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModel
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModelFactory
 import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
 import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.util.KeyboardUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
+import kotlinx.coroutines.launch
+import java.util.Locale
+
 
 class HomeFragment : Fragment(), OnItemClickCallback {
     private lateinit var resourceProvider: ResourceProvider
@@ -69,11 +77,13 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         val binding: FragmentHomeBinding = FragmentHomeBinding.inflate(inflater)
 
         binding.searchLayout.etSearch.setOnEditorActionListener { v, _, _ ->
+            KeyboardUtils.hideSoftKeyboard(v)
             searchPlace(v.text.toString())
             true
         }
 
         binding.searchLayout.ivSearch.setOnClickListener {
+            KeyboardUtils.hideSoftKeyboard(it)
             searchPlace(binding.searchLayout.etSearch.text.toString())
         }
 
@@ -167,7 +177,34 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun searchPlace(place: String) {
-        ToastUtils.showToast(requireContext(), place)
+        val trimmedPlace = place.trim()
+
+        if (trimmedPlace.isBlank()) {
+            ToastUtils.showToast(requireContext(), "Field can't be empty")
+            return
+        }
+
+        ServiceManager.getLGService()?.let { lgService ->
+            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+            val addresses = geocoder.getFromLocationName(trimmedPlace, 1)
+            if (!addresses.isNullOrEmpty()) {
+                val address = addresses[0]
+                val latitude = address.latitude
+                val longitude = address.longitude
+                lifecycleScope.launch {
+                    lgService.lookAt(
+                        Marker(
+                            title = address.getAddressLine(0).split(',').take(2).joinToString(", "),
+                            subtitle = address.getAddressLine(0),
+                            latLng = LatLng(latitude, longitude),
+                        )
+                    )
+                }
+            } else {
+                ToastUtils.showToast(requireContext(), "Location not found")
+            }
+        } ?: ServiceManager.showNoConnectionDialog()
     }
 }

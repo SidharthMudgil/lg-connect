@@ -130,8 +130,13 @@ class LGService(
     //    '1492.665945696469',
 //        '45',
 //        '0'
-    suspend fun flyTo(wonder: Wonder) {
-        sshService.execute("echo 'search=${wonder.title}' > /tmp/query.txt`)")
+    suspend fun flyTo(place: String) {
+        sshService.execute("echo 'search=${place}' > /tmp/query.txt`)")
+    }
+
+    suspend fun lookAt(marker: Marker) {
+        val kml = KMLService.lookAt(marker)
+        sshService.execute("")
     }
 
     suspend fun changePlanet(name: String) {

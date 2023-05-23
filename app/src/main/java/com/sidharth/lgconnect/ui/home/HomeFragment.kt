@@ -68,8 +68,13 @@ class HomeFragment : Fragment(), OnItemClickCallback {
     ): View {
         val binding: FragmentHomeBinding = FragmentHomeBinding.inflate(inflater)
 
-        binding.searchLayout.mcvSearch.setOnClickListener {
-            ToastUtils.showToast(requireContext(), "Coming soon...")
+        binding.searchLayout.etSearch.setOnEditorActionListener { v, _, _ ->
+            searchPlace(v.text.toString())
+            true
+        }
+
+        binding.searchLayout.ivSearch.setOnClickListener {
+            searchPlace(binding.searchLayout.etSearch.text.toString())
         }
 
         binding.rvPlanets.layoutManager = LinearLayoutManager(
@@ -160,5 +165,9 @@ class HomeFragment : Fragment(), OnItemClickCallback {
             false -> dialog.show()
             else -> dialog.show()
         }
+    }
+
+    private fun searchPlace(place: String) {
+        ToastUtils.showToast(requireContext(), place)
     }
 }

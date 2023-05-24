@@ -80,20 +80,22 @@ class SSHService(
 
     suspend fun execute(command: String): List<String> {
         return withContext(Dispatchers.IO) {
-            val session: Session = ssh.startSession()
             val output: MutableList<String> = ArrayList()
-            try {
-                session.exec(command).use { cmd ->
-                    cmd.inputStream.reader().useLines { lines ->
-                        lines.forEach { line -> output.add(line) }
+            if (ssh.isConnected) {
+                val session: Session = ssh.startSession()
+                try {
+                    session.exec(command).use { cmd ->
+                        cmd.inputStream.reader().useLines { lines ->
+                            lines.forEach { line -> output.add(line) }
+                        }
                     }
+                } catch (e: ConnectionException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } finally {
+                    session.close()
                 }
-            } catch (e: ConnectionException) {
-                e.printStackTrace()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } finally {
-                session.close()
             }
             output
         }

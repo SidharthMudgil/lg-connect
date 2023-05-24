@@ -1,7 +1,6 @@
 package com.sidharth.lgconnect.service
 
 import com.sidharth.lgconnect.domain.model.Marker
-import com.sidharth.lgconnect.domain.model.Wonder
 import kotlinx.coroutines.runBlocking
 
 class LGService(
@@ -153,7 +152,10 @@ class LGService(
 
     private suspend fun getScreenAmount(): String {
         val out = sshService.execute("grep -oP '(?<=DHCP_LG_FRAMES_MAX=).*' personavars.txt")
-        return out[0]
+        return when {
+            out.isEmpty() -> "1"
+            else -> out[0]
+        }
     }
 
     suspend fun createShowChart(type: String) {

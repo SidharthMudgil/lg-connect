@@ -11,8 +11,6 @@ object ServiceManager {
     private var sshService: SSHService? = null
     private var fileService: FileService? = null
     private var lgService: LGService? = null
-
-    private var contextRef: WeakReference<Context>? = null
     private var dialog: DialogUtils? = null
 
     fun initializeDialog(context: Context) {
@@ -34,7 +32,6 @@ object ServiceManager {
         port: Int,
     ) {
         initializeDialog(context)
-        contextRef = WeakReference(context.applicationContext)
         fileService = FileService(context)
         sshService = SSHService(hostname, port, username, password)
         lgService = LGService(sshService!!, fileService!!)
@@ -45,15 +42,20 @@ object ServiceManager {
         sshConfig: SSHConfig,
     ) {
         initializeDialog(context)
-        contextRef = WeakReference(context.applicationContext)
         fileService = FileService(context)
         sshService = SSHService(sshConfig)
         lgService = LGService(sshService!!, fileService!!)
     }
 
+    fun initialize(context: Context, sshService: SSHService) {
+        initializeDialog(context)
+        fileService = FileService(context)
+        this.sshService = sshService
+        lgService = LGService(sshService, fileService!!)
+    }
+
     fun initialize(context: Context, fileService: FileService, sshService: SSHService) {
         initializeDialog(context)
-        contextRef = WeakReference(context.applicationContext)
         this.fileService = fileService
         this.sshService = sshService
         lgService = LGService(sshService, fileService)

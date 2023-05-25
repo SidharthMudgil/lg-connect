@@ -135,12 +135,12 @@ class SettingsFragment : Fragment() {
             binding.mcvConnect.isClickable = false
 
             lifecycleScope.launch {
-                context?.let {
-                    ServiceManager.initialize(context = it, sshConfig = config)
-                }
+                val sshService = SSHService(config)
+                sshService.connect()
 
                 when (ServiceManager.getSSHService()?.connect()) {
                     true -> {
+                        ServiceManager.initialize(context = requireContext(), sshService = sshService)
                         viewModel.updateConnectionStatus(true)
                         binding.tvLabel.text = getString(R.string.connect)
                         binding.mcvConnect.isClickable = true

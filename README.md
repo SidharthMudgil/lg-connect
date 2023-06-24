@@ -38,7 +38,7 @@ git clone https://github.com/your-username/lg-connect.git
 
 If you prefer to download the APK directly and install it on your Android device, follow these steps:
 
-1. Download the APK file from the following link: [Insert link to APK file]
+1. Download the APK file from the following link: [lgconnect.apk](https://github.com/SidharthMudgil/lg-connect/releases/download/v1.0.0-alpha2/lg-connect.apk)
 
 2. Transfer the APK file to your Android device.
 

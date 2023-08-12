@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.sidharth.lgconnect.databinding.ItemCardWonderBinding
 import com.sidharth.lgconnect.domain.model.Wonder
-import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
+import com.sidharth.lgconnect.util.LGManager
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -23,8 +23,7 @@ class WondersAdapter(
 ) : Adapter<WondersAdapter.WonderHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WonderHolder {
         val binding = ItemCardWonderBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent, false
+            LayoutInflater.from(parent.context), parent, false
         )
 
         return WonderHolder(binding)
@@ -36,11 +35,7 @@ class WondersAdapter(
 
     override fun onBindViewHolder(holder: WonderHolder, position: Int) {
         holder.bind(
-            context,
-            wonders[position],
-            resourceProvider,
-            lifecycleScope,
-            onItemClickCallback
+            context, wonders[position], resourceProvider, lifecycleScope, onItemClickCallback
         )
     }
 
@@ -61,8 +56,7 @@ class WondersAdapter(
             itemBinding.mcvWonderCard.setOnClickListener {
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
-                        ServiceManager.getLGService()?.flyTo(wonder.title)
-                            ?: ServiceManager.showNoConnectionDialog()
+                        LGManager.getInstance()?.orbitAround(wonder.latLng)
                     }
                 }
             }

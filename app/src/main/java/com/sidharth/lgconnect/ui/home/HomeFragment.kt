@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.model.LatLng
-import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.data.repository.AppRepository
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
 import com.sidharth.lgconnect.domain.model.Marker
@@ -22,7 +21,6 @@ import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
-import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.home.adapter.ChartsAdapter
 import com.sidharth.lgconnect.ui.home.adapter.MarkersAdapter
 import com.sidharth.lgconnect.ui.home.adapter.PlanetAdapter
@@ -31,9 +29,10 @@ import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
 import com.sidharth.lgconnect.ui.home.callback.SwipeToDeleteCallback
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModel
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModelFactory
-import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
-import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.util.LGDialogs
 import com.sidharth.lgconnect.util.KeyboardUtils
+import com.sidharth.lgconnect.util.LGManager
+import com.sidharth.lgconnect.util.NetworkUtils
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -56,18 +55,24 @@ class HomeFragment : Fragment(), OnItemClickCallback {
             )
         )
     }
-    private val connectionStatusViewModel: ConnectionStatusViewModel by activityViewModels()
-    private lateinit var dialog: DialogUtils
+    private var lgDialogs: LGDialogs? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
-        dialog = DialogUtils(context = requireContext(),
-            image = resourceProvider.getDrawable(R.drawable.cartoon3),
-            title = resourceProvider.getString(R.string.no_connection_title),
-            description = resourceProvider.getString(R.string.no_connection_description),
-            buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),
-            onDialogButtonClick = { dialog.dismiss() })
+        lgDialogs = LGDialogs()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        lgDialogs?.dismissNoConnectionDialog()
+        lgDialogs = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lgDialogs?.dismissNoConnectionDialog()
+        lgDialogs = null
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -170,10 +175,14 @@ class HomeFragment : Fragment(), OnItemClickCallback {
     }
 
     override fun onClick(action: () -> Unit) {
-        when (connectionStatusViewModel.connectionStatus.value) {
-            true -> action()
-            false -> dialog.show()
-            else -> dialog.show()
+        if (NetworkUtils.isNetworkConnected(requireContext())) {
+            if (LGManager.getInstance()?.connected == true) {
+                action()
+            } else {
+                lgDialogs?.showNoConnectionDialog(requireContext())
+            }
+        } else {
+            ToastUtils.showToast(requireContext(), "No Network Connection")
         }
     }
 
@@ -186,25 +195,33 @@ class HomeFragment : Fragment(), OnItemClickCallback {
             return
         }
 
-        ServiceManager.getLGService()?.let { lgService ->
-            val geocoder = Geocoder(requireContext(), Locale.getDefault())
-            val addresses = geocoder.getFromLocationName(trimmedPlace, 1)
-            if (!addresses.isNullOrEmpty()) {
-                val address = addresses[0]
-                val latitude = address.latitude
-                val longitude = address.longitude
-                lifecycleScope.launch {
-                    lgService.lookAt(
-                        Marker(
-                            title = address.getAddressLine(0).split(',').take(2).joinToString(", "),
-                            subtitle = address.getAddressLine(0),
-                            latLng = LatLng(latitude, longitude),
+        if (NetworkUtils.isNetworkConnected(requireContext())) {
+            if (LGManager.getInstance()?.connected == true) {
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addresses = geocoder.getFromLocationName(trimmedPlace, 1)
+                if (!addresses.isNullOrEmpty()) {
+                    val address = addresses[0]
+                    val latitude = address.latitude
+                    val longitude = address.longitude
+                    lifecycleScope.launch {
+                        LGManager.getInstance()?.createMarker(
+                            Marker(
+                                title = address.getAddressLine(0)
+                                    .split(',').take(2)
+                                    .joinToString(", "),
+                                subtitle = address.getAddressLine(0),
+                                latLng = LatLng(latitude, longitude),
+                            )
                         )
-                    )
+                    }
+                } else {
+                    ToastUtils.showToast(requireContext(), "Location not found")
                 }
             } else {
-                ToastUtils.showToast(requireContext(), "Location not found")
+                lgDialogs?.showNoConnectionDialog(requireContext())
             }
-        } ?: ServiceManager.showNoConnectionDialog()
+        } else {
+            ToastUtils.showToast(requireContext(), "No Network Connection")
+        }
     }
 }

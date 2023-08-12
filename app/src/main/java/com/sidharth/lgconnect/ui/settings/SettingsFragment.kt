@@ -6,16 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentSettingsBinding
-import com.sidharth.lgconnect.domain.model.SSHConfig
-import com.sidharth.lgconnect.service.SSHService
-import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
-import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.util.FormValidator
 import com.sidharth.lgconnect.util.KeyboardUtils
+import com.sidharth.lgconnect.util.LGDialogs
+import com.sidharth.lgconnect.util.LGManager
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
 
@@ -26,26 +23,33 @@ const val HINT_PORT: String = "8080"
 
 class SettingsFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
-    private lateinit var dialog: DialogUtils
-    private val viewModel: ConnectionStatusViewModel by activityViewModels()
+    private lateinit var binding: FragmentSettingsBinding
+    private var lgDialogs: LGDialogs? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
-        dialog = DialogUtils(context = requireContext(),
-            image = resourceProvider.getDrawable(R.drawable.cartoon2),
-            title = resourceProvider.getString(R.string.connection_failed_title),
-            description = resourceProvider.getString(R.string.connection_failed_description),
-            buttonLabel = resourceProvider.getString(R.string.connection_failed_button_text),
-            onDialogButtonClick = { dialog.dismiss() })
+        lgDialogs = LGDialogs()
+    }
 
-        ServiceManager.initializeDialog(requireContext())
+    override fun onPause() {
+        super.onPause()
+        lgDialogs?.dismissNoConnectionDialog()
+        lgDialogs?.dismissConnectionFailedDialog()
+        lgDialogs = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lgDialogs?.dismissNoConnectionDialog()
+        lgDialogs?.dismissConnectionFailedDialog()
+        lgDialogs = null
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentSettingsBinding.inflate(inflater)
+        binding = FragmentSettingsBinding.inflate(inflater)
 
         binding.etUsername.setOnFocusChangeListener { v, hasFocus ->
             (v as EditText).hint = if (hasFocus) {
@@ -87,21 +91,6 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        viewModel.connectionStatus.observe(viewLifecycleOwner) {
-            when {
-                it -> {
-                    binding.tvConnectionStatus.text = resourceProvider.getString(R.string.connected)
-                    binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.lime_green))
-                }
-
-                else -> {
-                    binding.tvConnectionStatus.text =
-                        resourceProvider.getString(R.string.disconnected)
-                    binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.soft_red))
-                }
-            }
-        }
-
         binding.etPort.setOnEditorActionListener { v, _, _ ->
             KeyboardUtils.hideSoftKeyboard(v)
             connectIfValid(binding)
@@ -123,36 +112,38 @@ class SettingsFragment : Fragment() {
             binding.etPort to "Port number is required"
         )
 
-        if (SSHService.validate(fields)) {
-            val config = SSHConfig(
-                username = binding.etUsername.text.toString().trim(),
-                password = binding.etPassword.text.toString(),
-                hostname = binding.etIp.text.toString().trim(),
-                port = binding.etPort.text.toString().trim().toInt()
-            )
+        if (FormValidator.validate(fields)) {
 
             binding.tvLabel.text = getString(R.string.connecting)
             binding.mcvConnect.isClickable = false
 
             lifecycleScope.launch {
-                val sshService = SSHService(config)
-                sshService.connect()
+                LGManager.newInstance(
+                    username = binding.etUsername.text.toString().trim(),
+                    password = binding.etPassword.text.toString(),
+                    host = binding.etIp.text.toString().trim(),
+                    port = binding.etPort.text.toString().trim().toInt(),
+                    screens = 3
+                )
 
-                when (ServiceManager.getSSHService()?.connect()) {
-                    true -> {
-                        ServiceManager.initialize(context = requireContext(), sshService = sshService)
-                        viewModel.updateConnectionStatus(true)
-                        binding.tvLabel.text = getString(R.string.connect)
-                        binding.mcvConnect.isClickable = true
+                lifecycleScope.launch {
+                    when (LGManager.getInstance()?.connect() == true) {
+                        true -> onConnected()
+                        else -> onDisconnected()
                     }
-                    else -> {
-                        viewModel.updateConnectionStatus(false)
-                        binding.tvLabel.text = getString(R.string.connect)
-                        binding.mcvConnect.isClickable = true
-                        dialog.show()
-                    }
+                    binding.mcvConnect.isClickable = true
                 }
             }
         }
+    }
+
+    private fun onConnected() {
+        binding.tvConnectionStatus.text = resourceProvider.getString(R.string.connected)
+        binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.lime_green))
+    }
+
+    private fun onDisconnected() {
+        binding.tvConnectionStatus.text = resourceProvider.getString(R.string.disconnected)
+        binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.soft_red))
     }
 }

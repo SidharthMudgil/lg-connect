@@ -1,8 +1,12 @@
-package com.sidharth.lgconnect.service
+package com.sidharth.lgconnect.util
 
+import com.google.android.gms.maps.model.CameraPosition
 import com.sidharth.lgconnect.domain.model.Marker
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.pow
 
-object KMLService {
+object KMLUtils {
     fun createChartKML(type: String): String {
         return when (type) {
             "bar-chart" -> createBarChartKML()
@@ -40,46 +44,32 @@ object KMLService {
         return ""
     }
 
-    fun lookAt(marker: Marker): String {
-        return """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <kml xmlns="http://www.opengis.net/kml/2.2">
-              <Document>
-                <Placemark>
-                  <name>${marker.title}</name>
-                  <LookAt>
-                    <longitude>${marker.latLng.longitude}</longitude>
-                    <latitude>${marker.latLng.latitude}</latitude>
-                    <altitude>0</altitude>
-                    <heading>0</heading>
-                    <tilt>0</tilt>
-                    <range>5000</range>
-                  </LookAt>
-                </Placemark>
-              </Document>
-            </kml>
-        """.trimIndent()
-    }
-
-    fun createLogo(url: String): String {
-        return """
-        <?xml version="1.0" encoding="UTF-8"?>
-        <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
-            <Document id ="logo">
-                <name>LG Connect</name>
-                <Folder>
-                    <name>Logos</name>
-                    <ScreenOverlay>
-                    <name>Logo</name>
-                    <Icon><href>${url}</href> </Icon>
-                    <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
-                    <screenXY x="0.02" y="0.95" xunits="fraction" yunits="fraction"/>
-                    <rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
-                    <size x="0.6" y="0.4" xunits="fraction" yunits="fraction"/>
-                    </ScreenOverlay>
-                </Folder>
+    fun screenOverlayImage(): String = // TODO: Write href for the image url
+        """<kml xmlns="http://www.opengis.net/kml/2.2" 
+            xmlns:atom="http://www.w3.org/2005/Atom"
+            xmlns:gx="http://www.google.com/kml/ext/2.2">
+            <Document>
+            <name>LG Motion</name>
+            <Folder>
+            <name>Logo</name>
+            <ScreenOverlay>
+            <name>Logo</name>
+            <Icon>
+            <href></href>
+            </Icon>
+            <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+            <screenXY x="0.02" y="0.95" xunits="fraction" yunits="fraction"/>
+            <rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+            <size x="0.6" y="0.8" xunits="fraction" yunits="fraction"/>
+            </ScreenOverlay>
+            </Folder>
             </Document>
-        </kml>""".trimIndent()
+            </kml>""".trimMargin()
+
+    fun lookAt(camera: CameraPosition): String {
+        val zoom =
+            156543.03392 * cos(camera.target.latitude * PI / 180) / 2.0.pow(camera.zoom.toDouble())
+        return """<LookAt><longitude>${camera.target.longitude}</longitude><latitude>${camera.target.latitude}</latitude><range>${zoom * 1000}</range><tilt>${camera.tilt}</tilt><heading>${camera.bearing}</heading><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
     }
 
     fun createMarker(marker: Marker): String {

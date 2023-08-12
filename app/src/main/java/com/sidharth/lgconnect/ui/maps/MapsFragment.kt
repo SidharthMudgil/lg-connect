@@ -6,14 +6,14 @@ import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -25,9 +25,10 @@ import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetMarkersUseCaseImpl
 import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModel
 import com.sidharth.lgconnect.ui.maps.viewmodel.MapsViewModelFactory
-import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.util.LGManager
 import com.sidharth.lgconnect.util.NetworkUtils
 import com.sidharth.lgconnect.util.ToastUtils
+import kotlinx.coroutines.launch
 
 
 class MapsFragment : Fragment(), OnMapLongClickListener {
@@ -44,7 +45,6 @@ class MapsFragment : Fragment(), OnMapLongClickListener {
             )
         )
     }
-    private lateinit var dialog: DialogUtils
     private lateinit var vibrator: Vibrator
 
     private val callback = OnMapReadyCallback { googleMap ->
@@ -59,6 +59,10 @@ class MapsFragment : Fragment(), OnMapLongClickListener {
                 LatLng(21.51, 81.23), 1f
             )
         )
+
+        googleMap.setOnCameraIdleListener {
+            updateMap(googleMap.cameraPosition)
+        }
 
         viewModel.markers.observe(viewLifecycleOwner) { markers ->
             googleMap.clear()
@@ -75,23 +79,7 @@ class MapsFragment : Fragment(), OnMapLongClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        dialog = DialogUtils(
-            context = requireContext(),
-            image = ContextCompat.getDrawable(requireContext(), R.drawable.cartoon1)!!,
-            title = getString(R.string.no_network_title),
-            description = getString(R.string.no_network_description),
-            buttonLabel = getString(R.string.no_network_button_text),
-            onDialogButtonClick = {
-                dialog.dismiss()
-            }
-        )
         vibrator = requireContext().getSystemService(Vibrator::class.java)
-
-        NetworkUtils.startNetworkCallback(context = requireContext(), onConnectionLost = {
-            dialog.show()
-        }, onConnectionAvailable = {
-            dialog.dismiss()
-        })
 
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
@@ -102,9 +90,14 @@ class MapsFragment : Fragment(), OnMapLongClickListener {
         mapFragment?.getMapAsync(callback)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        NetworkUtils.stopNetworkCallback(requireContext())
+    private fun updateMap(cameraPosition: CameraPosition) {
+        if (NetworkUtils.isNetworkConnected(requireContext())) {
+            if (LGManager.getInstance()?.connected == true) {
+                lifecycleScope.launch {
+                    LGManager.getInstance()?.flyTo(cameraPosition)
+                }
+            }
+        }
     }
 
     override fun onMapLongClick(latLng: LatLng) {
@@ -120,7 +113,7 @@ class MapsFragment : Fragment(), OnMapLongClickListener {
                 viewModel.addMarker(mkr)
             }
         } else {
-            dialog.show()
+            ToastUtils.showToast(requireContext(), "No Network Connection")
         }
     }
 }

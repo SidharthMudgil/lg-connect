@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentCodeEditorBinding
-import com.sidharth.lgconnect.service.ServiceManager
-import com.sidharth.lgconnect.ui.viewmodel.ConnectionStatusViewModel
-import com.sidharth.lgconnect.util.DialogUtils
+import com.sidharth.lgconnect.util.LGDialogs
+import com.sidharth.lgconnect.util.LGManager
+import com.sidharth.lgconnect.util.NetworkUtils
 import com.sidharth.lgconnect.util.ResourceProvider
+import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
@@ -28,19 +28,26 @@ class CodeEditorFragment : Fragment() {
     private val patternString = Pattern.compile("[\"'][^\"']*?[\"']")
 
     private lateinit var resourceProvider: ResourceProvider
-    private lateinit var dialog: DialogUtils
-    private val viewModel: ConnectionStatusViewModel by activityViewModels()
+    private lateinit var dialog: LGDialogs
+
+    private var lgDialogs: LGDialogs? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
-        dialog = DialogUtils(
-            context = requireContext(),
-            image = resourceProvider.getDrawable(R.drawable.cartoon3),
-            title = resourceProvider.getString(R.string.no_connection_title),
-            description = resourceProvider.getString(R.string.no_connection_description),
-            buttonLabel = resourceProvider.getString(R.string.no_connection_button_text),
-            onDialogButtonClick = { dialog.dismiss() })
+        lgDialogs = LGDialogs()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        lgDialogs?.dismissNoConnectionDialog()
+        lgDialogs = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lgDialogs?.dismissNoConnectionDialog()
+        lgDialogs = null
     }
 
     override fun onCreateView(
@@ -82,12 +89,16 @@ class CodeEditorFragment : Fragment() {
         binding.codeView.setEnableHighlightCurrentLine(true)
 
         binding.fabSendKml.setOnClickListener {
-            lifecycleScope.launch {
-                if (viewModel.connectionStatus.value == true) {
-                    ServiceManager.getLGService()?.sendKml(binding.codeView.text.toString()) ?: dialog.show()
-                } else {
-                    dialog.show()
+            if (NetworkUtils.isNetworkConnected(requireContext())) {
+                lifecycleScope.launch {
+                    if (LGManager.getInstance()?.connected == true) {
+                        LGManager.getInstance()?.sendKml(binding.codeView.text.toString())
+                    } else {
+                        lgDialogs?.showNoConnectionDialog(requireContext())
+                    }
                 }
+            } else {
+                ToastUtils.showToast(requireContext(), "No Network Connection")
             }
         }
 

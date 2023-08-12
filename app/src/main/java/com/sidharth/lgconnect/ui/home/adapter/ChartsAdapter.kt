@@ -7,8 +7,8 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.sidharth.lgconnect.databinding.ItemCardChartBinding
 import com.sidharth.lgconnect.domain.model.Chart
-import com.sidharth.lgconnect.service.ServiceManager
 import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
+import com.sidharth.lgconnect.util.LGManager
 import com.sidharth.lgconnect.util.ResourceProvider
 import com.sidharth.lgconnect.util.ToastUtils
 import kotlinx.coroutines.launch
@@ -54,8 +54,7 @@ class ChartsAdapter(
             itemBinding.mcvChartCard.setOnClickListener {
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
-                        ServiceManager.getLGService()?.createShowChart(chart.type)
-                            ?: ServiceManager.showNoConnectionDialog()
+                        LGManager.getInstance()?.showChart(chart.type)
                     }
                 }
             }

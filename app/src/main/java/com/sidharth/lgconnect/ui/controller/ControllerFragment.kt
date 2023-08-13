@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentControllerBinding
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionViewModel
 import com.sidharth.lgconnect.util.LGDialogs
 import com.sidharth.lgconnect.util.LGManager
 import com.sidharth.lgconnect.util.NetworkUtils
@@ -20,11 +22,18 @@ class ControllerFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
     private lateinit var binding: FragmentControllerBinding
     private var lgDialogs: LGDialogs? = null
+    private val connectionViewModel: ConnectionViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
         lgDialogs = LGDialogs()
+        connectionViewModel.connectionStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                true -> onConnected()
+                else -> onDisconnected()
+            }
+        }
     }
 
     override fun onPause() {

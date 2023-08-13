@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.databinding.FragmentSettingsBinding
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionViewModel
 import com.sidharth.lgconnect.util.FormValidator
 import com.sidharth.lgconnect.util.KeyboardUtils
 import com.sidharth.lgconnect.util.LGDialogs
@@ -25,11 +27,18 @@ class SettingsFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
     private lateinit var binding: FragmentSettingsBinding
     private var lgDialogs: LGDialogs? = null
+    private val connectionViewModel: ConnectionViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
         lgDialogs = LGDialogs()
+        connectionViewModel.connectionStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                true -> onConnected()
+                else -> onDisconnected()
+            }
+        }
     }
 
     override fun onPause() {
@@ -128,8 +137,15 @@ class SettingsFragment : Fragment() {
 
                 lifecycleScope.launch {
                     when (LGManager.getInstance()?.connect() == true) {
-                        true -> onConnected()
-                        else -> onDisconnected()
+                        true -> {
+                            connectionViewModel.setConnectionStatus(true)
+                            onConnected()
+                        }
+
+                        else -> {
+                            connectionViewModel.setConnectionStatus(false)
+                            onDisconnected()
+                        }
                     }
                     binding.mcvConnect.isClickable = true
                 }

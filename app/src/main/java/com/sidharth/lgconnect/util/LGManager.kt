@@ -20,18 +20,9 @@ class LGManager(
     private val port: Int,
     private val screens: Int,
 ) {
-    private val logoSlave = "slave_${leftScreen}"
+    private val logoSlave: String get() = "slave_${if (screens == 1) 1 else (screens / 2) + 2}"
+    private val dataSlave: String get() = "slave_${if (screens == 1) 1 else (screens / 2) + 1}"
     private var session: Session? = null
-
-    private val leftScreen: Int
-        get() {
-            return if (screens == 1) 1 else (screens / 2) + 2
-        }
-
-    private val rightScreen: Int
-        get() {
-            return if (screens == 1) 1 else (screens / 2) + 1
-        }
 
     val connected: Boolean
         get() {
@@ -113,61 +104,39 @@ class LGManager(
         for (i in 2..screens) {
             execute("chmod 777 /var/www/html/kml/slave_$i.kml; echo '' > /var/www/html/kml/slave_$i.kml")
         }
+        execute("echo '' > /tmp/query.txt")
+        execute("echo '' > /var/www/html/kmls.txt")
     }
 
-    suspend fun uploadFile(name: String, file: File) {
-        withContext(Dispatchers.IO) {
-            if (session != null && connected) {
-                val channel = session?.openChannel("sftp") as ChannelSftp
-                channel.connect()
-                try {
-                    val remotePath = "/var/www/html/$name.kml"
-                    channel.put(file.absolutePath, remotePath)
-                    channel.chmod(644, remotePath)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    channel.disconnect()
-                } finally {
-                    channel.disconnect()
-                }
-            }
+    private suspend fun clearData() {
+        execute("echo '' > /var/www/html/kml/${dataSlave}}.kml")
+    }
+
+    suspend fun sendKml(kml: String, refresh: Boolean = true) {
+        if (refresh) {
+            clearData()
         }
+        execute("echo '\n$kml' > /var/www/html/kmls.txt")
     }
 
-    suspend fun deleteFile(name: String) {
-        withContext(Dispatchers.IO) {
-            if (session != null && connected) {
-                val channel = session?.openChannel("sftp") as ChannelSftp
-                channel.connect()
-                try {
-                    channel.rm("/var/www/html/$name")
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    channel.disconnect()
-                }
-            }
-        }
-    }
-
-    suspend fun sendKml(kml: String) {
-        execute(kml) // TODO
+    private suspend fun sendKmlToSlave(kml: String) {
+        execute("echo '\n$kml' > /var/www/html/kml/${dataSlave}.kml")
     }
 
     suspend fun createMarker(marker: Marker) {
-        execute(KMLUtils.createMarker(marker)) // TODO
+        sendKml(KMLUtils.createMarker(marker), refresh = false)
     }
 
     suspend fun changePlanet(planet: String) {
-        execute("") // TODO
+        execute("echo 'planet=$planet' > /tmp/query.txt")
     }
 
     suspend fun showChart(type: String) {
-        execute(KMLUtils.createChartKML(type)) // TODO
+        sendKmlToSlave(KMLUtils.createChartKML(type))
     }
 
-    suspend fun orbitAround(latLng: LatLng) {
-        execute("") // TODO
+    suspend fun flyTo(latLng: LatLng) {
+        execute("echo 'flytoview=${KMLUtils.lookAt(latLng)}' > /tmp/query.txt")
     }
 
     suspend fun flyTo(cameraPosition: CameraPosition) {
@@ -229,6 +198,41 @@ class LGManager(
     suspend fun shutdown() {
         for (i in screens downTo 1) {
             execute("""sshpass -p $password ssh -t lg$i "echo $password | sudo -S poweroff"""")
+        }
+    }
+
+    suspend fun uploadFile(name: String, file: File) {
+        withContext(Dispatchers.IO) {
+            if (session != null && connected) {
+                val channel = session?.openChannel("sftp") as ChannelSftp
+                channel.connect()
+                try {
+                    val remotePath = "/var/www/html/$name.kml"
+                    channel.put(file.absolutePath, remotePath)
+                    channel.chmod(644, remotePath)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    channel.disconnect()
+                } finally {
+                    channel.disconnect()
+                }
+            }
+        }
+    }
+
+    suspend fun deleteFile(name: String) {
+        withContext(Dispatchers.IO) {
+            if (session != null && connected) {
+                val channel = session?.openChannel("sftp") as ChannelSftp
+                channel.connect()
+                try {
+                    channel.rm("/var/www/html/$name")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    channel.disconnect()
+                }
+            }
         }
     }
 

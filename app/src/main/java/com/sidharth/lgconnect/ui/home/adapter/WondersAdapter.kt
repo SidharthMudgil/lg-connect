@@ -56,7 +56,7 @@ class WondersAdapter(
             itemBinding.mcvWonderCard.setOnClickListener {
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
-                        LGManager.getInstance()?.orbitAround(wonder.latLng)
+                        LGManager.getInstance()?.flyTo(wonder.latLng)
                     }
                 }
             }

@@ -55,7 +55,7 @@ object KMLUtils {
             <ScreenOverlay>
             <name>Logo</name>
             <Icon>
-            <href>https://raw.githubusercontent.com/SidharthMudgil/lg-connect/19e6975df2a76e29d72996a2abdf31ce1cee1689/app/src/main/res/drawable/empty.png</href>
+            <href>https://raw.githubusercontent.com/SidharthMudgil/lg-connect/b6d8484f26ef84548c7da03cfb047f95fab36317/logo.png</href>
             </Icon>
             <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
             <screenXY x="0.02" y="0.95" xunits="fraction" yunits="fraction"/>

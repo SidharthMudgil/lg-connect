@@ -109,7 +109,7 @@ class LGManager(
     }
 
     private suspend fun clearData() {
-        execute("echo '' > /var/www/html/kml/${dataSlave}}.kml")
+        execute("chmod 777 /var/www/html/kml/$dataSlave.kml; echo '' > /var/www/html/kml/${dataSlave}}.kml")
     }
 
     suspend fun sendKml(kml: String, refresh: Boolean = true) {
@@ -120,7 +120,7 @@ class LGManager(
     }
 
     private suspend fun sendKmlToSlave(kml: String) {
-        execute("echo '\n$kml' > /var/www/html/kml/${dataSlave}.kml")
+        execute("chmod 777 /var/www/html/kml/$dataSlave.kml; echo '\n$kml' > /var/www/html/kml/${dataSlave}.kml")
     }
 
     suspend fun createMarker(marker: Marker) {

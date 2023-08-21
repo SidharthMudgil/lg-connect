@@ -56,7 +56,7 @@ class MarkersAdapter(
             itemBinding.mcvMarkerCard.setOnClickListener {
                 onItemClickCallback.onClick {
                     lifecycleScope.launch {
-                        LGManager.getInstance()?.createMarker(marker)
+                        LGManager.getInstance()?.flyTo(marker.latLng)
                     }
                 }
             }

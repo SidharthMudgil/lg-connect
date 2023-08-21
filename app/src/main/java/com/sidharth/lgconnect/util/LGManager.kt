@@ -123,8 +123,8 @@ class LGManager(
         execute("chmod 777 /var/www/html/kml/$dataSlave.kml; echo '\n$kml' > /var/www/html/kml/${dataSlave}.kml")
     }
 
-    suspend fun createMarker(marker: Marker) {
-        sendKml(KMLUtils.createMarker(marker), refresh = false)
+    suspend fun showMarkers(markers: List<Marker>) {
+        execute("echo '${KMLUtils.createMarkers(markers)}' > /var/www/html/kmls.txt")
     }
 
     suspend fun changePlanet(planet: String) {
@@ -133,6 +133,10 @@ class LGManager(
 
     suspend fun showChart(type: String) {
         sendKmlToSlave(KMLUtils.createChartKML(type))
+    }
+
+    suspend fun orbitAround(latLng: LatLng) {
+        execute("echo 'flytoview=${KMLUtils.orbitAround(latLng)}' > /tmp/query.txt")
     }
 
     suspend fun flyTo(latLng: LatLng) {

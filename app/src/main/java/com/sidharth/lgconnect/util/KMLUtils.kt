@@ -66,50 +66,75 @@ object KMLUtils {
             </Document>
             </kml>""".trimMargin()
 
+    fun lookAt(latLng: LatLng): String {
+        return """<LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><range>1000</range><tilt>0</tilt><heading>79</heading><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
+    }
+
     fun lookAt(camera: CameraPosition): String {
         val zoom =
             156543.03392 * cos(camera.target.latitude * PI / 180) / 2.0.pow(camera.zoom.toDouble())
-        return """<LookAt><longitude>${camera.target.longitude}</longitude><latitude>${camera.target.latitude}</latitude><range>${zoom * 1000}</range><tilt>${camera.tilt}</tilt><heading>${camera.bearing}</heading><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
+        return """<LookAt><longitude>${camera.target.longitude}</longitude><latitude>${camera.target.latitude}</latitude><range>${zoom * 1000}</range><tilt>${camera.tilt}</tilt><heading>${camera.bearing}</heading><gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode></LookAt>"""
     }
 
-    fun lookAt(latLng: LatLng): String {
-        val zoom = 156543.03392 * cos(latLng.latitude * PI / 180) / 2.0.pow(18)
-        return """<LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><range>${zoom * 1000}</range><tilt>${1}</tilt><heading>${0}</heading><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
+    fun orbitAround(latLng: LatLng): String {
+        return """<gx:duration>3</gx:duration><gx:flyToMode>smooth</gx:flyToMode><LookAt>
+        <longitude>${latLng.longitude}</longitude>
+        <latitude>${latLng.latitude}</latitude>
+        <altitude>0</altitude>
+        <heading>79</heading>
+        <tilt>60</tilt>
+        <range>500</range>
+        <gx:altitudeMode>relativeToGround</gx:altitudeMode>
+        </LookAt>"""
     }
 
-    fun createMarker(marker: Marker): String {
-        return """
-        <?xml version="1.0" encoding="UTF-8"?>
+    fun createMarkers(markers: List<Marker>): String {
+        return """<?xml version="1.0" encoding="UTF-8"?>
         <kml xmlns="http://www.opengis.net/kml/2.2">
-            <Document>
-                <name>My Markers</name>
-                <Style id="defaultMarker">
-                  <IconStyle>
+        ${generateMarkersMarkup(markers)}
+        </kml>
+        """.trimIndent()
+    }
+
+    private fun generateMarkersMarkup(markers: List<Marker>): String {
+        val markersMarkup = StringBuilder()
+
+        markersMarkup.append("""
+        <Document>
+            <name>My Markers</name>
+            <Style id="defaultMarker">
+                <IconStyle>
                     <Icon>
-                      <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+                        <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
                     </Icon>
-                  </IconStyle>
-                </Style>
-        
-                <Placemark>
-                    <styleUrl>#defaultMarker</styleUrl>
-                    <name>${marker.title}</name>
-                    <Point>
-                        <coordinates>${marker.latLng.longitude},${marker.latLng.latitude},0</coordinates>
-                    </Point>
-                    <Style>
-                        <BalloonStyle>
-                            <text><![CDATA[
+                </IconStyle>
+            </Style>
+    """.trimIndent())
+
+        for (marker in markers) {
+            markersMarkup.append("""
+            <Placemark>
+                <styleUrl>#defaultMarker</styleUrl>
+                <name>${marker.title}</name>
+                <Point>
+                    <coordinates>${marker.latLng.longitude},${marker.latLng.latitude},0</coordinates>
+                </Point>
+                <Style>
+                    <BalloonStyle>
+                        <text><![CDATA[
                             <center><h3>${marker.title}</h3><hr></center>
                             <p>
                                 <b>Address:</b> ${marker.subtitle}<br>
-                                <b>LatLng:</b> ${marker.latLng}<br>
+                                <b>LatLng:</b> ${marker.latLng.latitude},${marker.latLng.longitude}<br>
                             </p>
-                            ]]></text>
-                        </BalloonStyle>
-                    </Style>
-                </Placemark>
-            </Document>
-        </kml>""".trimIndent()
+                        ]]></text>
+                    </BalloonStyle>
+                </Style>
+            </Placemark>
+        """.trimIndent())
+        }
+
+        markersMarkup.append("</Document>")
+        return markersMarkup.toString()
     }
 }

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.model.LatLng
 import com.sidharth.lgconnect.data.repository.AppRepository
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
-import com.sidharth.lgconnect.domain.model.Marker
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCaseImpl
@@ -29,8 +28,8 @@ import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
 import com.sidharth.lgconnect.ui.home.callback.SwipeToDeleteCallback
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModel
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModelFactory
-import com.sidharth.lgconnect.util.LGDialogs
 import com.sidharth.lgconnect.util.KeyboardUtils
+import com.sidharth.lgconnect.util.LGDialogs
 import com.sidharth.lgconnect.util.LGManager
 import com.sidharth.lgconnect.util.NetworkUtils
 import com.sidharth.lgconnect.util.ResourceProvider
@@ -151,6 +150,9 @@ class HomeFragment : Fragment(), OnItemClickCallback {
                     )
                 }
                 binding.rvMarkers.adapter?.notifyDataSetChanged()
+                lifecycleScope.launch {
+                    LGManager.getInstance()?.showMarkers(markers)
+                }
             }
         }
         binding.rvMarkers.layoutManager = LinearLayoutManager(
@@ -204,15 +206,7 @@ class HomeFragment : Fragment(), OnItemClickCallback {
                     val latitude = address.latitude
                     val longitude = address.longitude
                     lifecycleScope.launch {
-                        LGManager.getInstance()?.createMarker(
-                            Marker(
-                                title = address.getAddressLine(0)
-                                    .split(',').take(2)
-                                    .joinToString(", "),
-                                subtitle = address.getAddressLine(0),
-                                latLng = LatLng(latitude, longitude),
-                            )
-                        )
+                        LGManager.getInstance()?.flyTo(LatLng(latitude, longitude))
                     }
                 } else {
                     ToastUtils.showToast(requireContext(), "Location not found")

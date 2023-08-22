@@ -43,25 +43,25 @@ class LGDialogs {
             }
 
             else -> {
-                connectionFailedDialog = Dialog(context)
-                connectionFailedDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                connectionFailedDialog?.setCancelable(false)
-                connectionFailedDialog?.setContentView(R.layout.lg_alert_dialog)
-                connectionFailedDialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                noConnectionDialog = Dialog(context)
+                noConnectionDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                noConnectionDialog?.setCancelable(false)
+                noConnectionDialog?.setContentView(R.layout.lg_alert_dialog)
+                noConnectionDialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-                val iv = connectionFailedDialog?.findViewById<ImageView>(R.id.iv)
-                val titleTV = connectionFailedDialog?.findViewById<TextView>(R.id.tv_title)
+                val iv = noConnectionDialog?.findViewById<ImageView>(R.id.iv)
+                val titleTV = noConnectionDialog?.findViewById<TextView>(R.id.tv_title)
                 val descriptionTV =
-                    connectionFailedDialog?.findViewById<TextView>(R.id.tv_description)
-                val labelTV = connectionFailedDialog?.findViewById<TextView>(R.id.tv_label)
-                val mcv = connectionFailedDialog?.findViewById<MaterialCardView>(R.id.mcv)
+                    noConnectionDialog?.findViewById<TextView>(R.id.tv_description)
+                val labelTV = noConnectionDialog?.findViewById<TextView>(R.id.tv_label)
+                val mcv = noConnectionDialog?.findViewById<MaterialCardView>(R.id.mcv)
 
                 iv?.setImageDrawable(resourceProvider.getDrawable(R.drawable.cartoon1))
                 titleTV?.text = resourceProvider.getString(R.string.no_connection_title)
                 descriptionTV?.text = resourceProvider.getString(R.string.no_connection_description)
                 labelTV?.text = resourceProvider.getString(R.string.no_connection_button_text)
                 mcv?.setOnClickListener {
-                    connectionFailedDialog?.dismiss()
+                    noConnectionDialog?.dismiss()
                 }
             }
         }
@@ -75,7 +75,7 @@ class LGDialogs {
     }
 
     fun dismissConnectionFailedDialog() {
-        connectionFailedDialog?.show()
+        connectionFailedDialog?.dismiss()
     }
 
     fun showNoConnectionDialog(context: Context) {

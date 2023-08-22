@@ -9,40 +9,56 @@ import kotlin.math.pow
 
 object KMLUtils {
     fun createChartKML(type: String): String {
-        return when (type) {
-            "bar-chart" -> createBarChartKML()
-            "line-chart" -> createLineChartKML()
-            "gauge-chart" -> createGaugeChartKML()
-            "scatter-chart" -> createScatterChartKML()
-            "radar-chart" -> createRadarChartKML()
-            "pie-chart" -> createPieChartKML()
-            else -> ""
-        }
+        return """<?xml version="1.0" encoding="UTF-8"?>
+        <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+        <Document>
+        <name>Charts Example</name>
+        <ScreenOverlay>
+        <name><![CDATA[<div style="text-align: center; font-size: 20px; font-weight: bold; vertical-align: middle;">Sample Chart</div>]]></name>
+        <description>
+        <![CDATA[
+        <html>
+        <body>${
+            when (type) {
+                "bar-chart" -> createBarChartKML()
+                "line-chart" -> createLineChartKML()
+                "gauge-chart" -> createGaugeChartKML()
+                "scatter-chart" -> createScatterChartKML()
+                "radar-chart" -> createRadarChartKML()
+                "pie-chart" -> createPieChartKML()
+                else -> ""
+            }
+        }</body>
+        </html>
+        ]]></description>
+        <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+        <screenXY x="1" y="1" xunits="fraction" yunits="fraction"/>
+        <rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+        <size x="0" y="0" xunits="fraction" yunits="fraction"/>
+        <gx:balloonVisibility>1</gx:balloonVisibility>
+        </ScreenOverlay>
+        </Document>
+        </kml>
+        """.trimIndent().trimMargin()
     }
 
-    private fun createBarChartKML(): String {
-        return ""
-    }
+    private fun createBarChartKML(): String =
+        """<img src="https://chart.googleapis.com/chart?chs=300x200&cht=bvg&chd=t:10,20,30,40,50&chl=Label+1|Label+2|Label+3|Label+4|Label+5" alt="Bar Chart" />"""
 
-    private fun createLineChartKML(): String {
-        return ""
-    }
+    private fun createLineChartKML(): String =
+        """<img src="https://chart.googleapis.com/chart?chs=300x200&cht=lc&chd=t:10,20,30,40,50&chl=Label+1|Label+2|Label+3|Label+4|Label+5" alt="Line Chart" />"""
 
-    private fun createPieChartKML(): String {
-        return ""
-    }
+    private fun createPieChartKML(): String =
+        """<img src="https://chart.googleapis.com/chart?chs=300x200&cht=p&chd=t:10,20,30,40,50&chl=Label+1|Label+2|Label+3|Label+4|Label+5" alt="Pie Chart" />"""
 
-    private fun createGaugeChartKML(): String {
-        return ""
-    }
+    private fun createGaugeChartKML(): String =
+        """<img src="https://chart.googleapis.com/chart?chs=300x200&cht=gom&chd=t:70&chl=Gauge" alt="Gauge Chart" />"""
 
-    private fun createScatterChartKML(): String {
-        return ""
-    }
+    private fun createScatterChartKML(): String =
+        """<img src="https://chart.googleapis.com/chart?chs=300x200&cht=s&chd=t:10,20,30,40,50&chdl=Label+Series&chco=FF0000|00FF00|0000FF&chdlp=b" alt="Scatter Chart" />"""
 
-    private fun createRadarChartKML(): String {
-        return ""
-    }
+    private fun createRadarChartKML(): String =
+        """<img src="https://chart.googleapis.com/chart?chs=300x200&cht=r&chd=t:10,20,30,40,50&chl=Label+1|Label+2|Label+3|Label+4|Label+5" alt="Radar Chart" />"""
 
     fun screenOverlayImage(): String =
         """<kml xmlns="http://www.opengis.net/kml/2.2" 
@@ -67,7 +83,7 @@ object KMLUtils {
             </kml>""".trimMargin()
 
     fun lookAt(latLng: LatLng): String {
-        return """<LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><range>1000</range><tilt>0</tilt><heading>79</heading><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
+        return """<LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><range>200</range><tilt>0</tilt><heading>79</heading><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
     }
 
     fun lookAt(camera: CameraPosition): String {
@@ -88,19 +104,19 @@ object KMLUtils {
         </LookAt>"""
     }
 
-    fun createMarkers(markers: List<Marker>): String {
+    fun generateMarkersKml(markers: List<Marker>): String {
         return """<?xml version="1.0" encoding="UTF-8"?>
-        <kml xmlns="http://www.opengis.net/kml/2.2">
-        ${generateMarkersMarkup(markers)}
+        <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+        ${generateMarker(markers)}
         </kml>
         """.trimIndent()
     }
 
-    private fun generateMarkersMarkup(markers: List<Marker>): String {
-        val markersMarkup = StringBuilder()
+    private fun generateMarker(markers: List<Marker>): String {
+        val kml = StringBuilder()
 
-        markersMarkup.append("""
-        <Document>
+        kml.append(
+            """<Document>
             <name>My Markers</name>
             <Style id="defaultMarker">
                 <IconStyle>
@@ -109,10 +125,12 @@ object KMLUtils {
                     </Icon>
                 </IconStyle>
             </Style>
-    """.trimIndent())
+        """.trimIndent()
+        )
 
         for (marker in markers) {
-            markersMarkup.append("""
+            kml.append(
+                """
             <Placemark>
                 <styleUrl>#defaultMarker</styleUrl>
                 <name>${marker.title}</name>
@@ -131,10 +149,11 @@ object KMLUtils {
                     </BalloonStyle>
                 </Style>
             </Placemark>
-        """.trimIndent())
+        """.trimIndent()
+            )
         }
 
-        markersMarkup.append("</Document>")
-        return markersMarkup.toString()
+        kml.append("</Document>")
+        return kml.toString()
     }
 }

@@ -124,7 +124,7 @@ class LGManager(
     }
 
     suspend fun showMarkers(markers: List<Marker>) {
-        execute("echo '${KMLUtils.createMarkers(markers)}' > /var/www/html/kmls.txt")
+        execute("echo '${KMLUtils.generateMarkersKml(markers)}' > /var/www/html/kmls.txt")
     }
 
     suspend fun changePlanet(planet: String) {
@@ -137,10 +137,6 @@ class LGManager(
 
     suspend fun orbitAround(latLng: LatLng) {
         execute("echo 'flytoview=${KMLUtils.orbitAround(latLng)}' > /tmp/query.txt")
-    }
-
-    suspend fun flyTo(latLng: LatLng) {
-        execute("echo 'flytoview=${KMLUtils.lookAt(latLng)}' > /tmp/query.txt")
     }
 
     suspend fun flyTo(cameraPosition: CameraPosition) {

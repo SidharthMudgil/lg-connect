@@ -89,67 +89,50 @@ object KMLUtils {
     }
 
     fun orbitAround(latLng: LatLng): String {
-        return """<gx:duration>3</gx:duration><gx:flyToMode>smooth</gx:flyToMode><LookAt>
-        <longitude>${latLng.longitude}</longitude>
-        <latitude>${latLng.latitude}</latitude>
-        <altitude>0</altitude>
-        <heading>79</heading>
-        <tilt>60</tilt>
-        <range>500</range>
-        <gx:altitudeMode>relativeToGround</gx:altitudeMode>
-        </LookAt>"""
+        return """<gx:duration>3</gx:duration><gx:flyToMode>smooth</gx:flyToMode><LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><altitude>0</altitude><heading>79</heading><tilt>60</tilt><range>500</range><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
     }
 
-    fun generateMarkersKml(markers: List<Marker>): String {
-        return """<?xml version="1.0" encoding="UTF-8"?>
-        <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
-        ${generateMarker(markers)}
-        </kml>
-        """.trimIndent()
-    }
+    fun generateMarkersKml(markers: List<Marker>): String =
+        """<kml xmlns="http://www.opengis.net/kml/2.2"
+            xmlns:gx="http://www.google.com/kml/ext/2.2"
+            xmlns:kml="http://www.opengis.net/kml/2.2"
+            xmlns:atom="http://www.w3.org/2005/Atom">
+            <Document>
+            <name>Markers</name>
+            <Style id="defaultMarker">
+            <IconStyle>
+            <Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon>
+            </IconStyle>
+            </Style>
+            ${generateMarker(markers)}
+            </Document>
+            </kml>""".trimMargin()
 
     private fun generateMarker(markers: List<Marker>): String {
-        val kml = StringBuilder()
-
-        kml.append(
-            """<Document>
-            <name>My Markers</name>
-            <Style id="defaultMarker">
-                <IconStyle>
-                    <Icon>
-                        <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
-                    </Icon>
-                </IconStyle>
-            </Style>
-        """.trimIndent()
-        )
-
+        val kml = ""
         for (marker in markers) {
-            kml.append(
+            kml.plus(
                 """
-            <Placemark>
-                <styleUrl>#defaultMarker</styleUrl>
-                <name>${marker.title}</name>
-                <Point>
+                    <Placemark>
+                    <styleUrl>#defaultMarker</styleUrl>
+                    <name>${marker.title}</name>
+                    <Point>
                     <coordinates>${marker.latLng.longitude},${marker.latLng.latitude},0</coordinates>
-                </Point>
-                <Style>
+                    </Point>
+                    <Style>
                     <BalloonStyle>
-                        <text><![CDATA[
-                            <center><h3>${marker.title}</h3><hr></center>
-                            <p>
-                                <b>Address:</b> ${marker.subtitle}<br>
-                                <b>LatLng:</b> ${marker.latLng.latitude},${marker.latLng.longitude}<br>
-                            </p>
-                        ]]></text>
+                    <text><![CDATA[
+                    <center><h3>${marker.title}</h3><hr></center>
+                    <p>
+                    <b>Address:</b> ${marker.subtitle}<br>
+                    <b>LatLng:</b> ${marker.latLng.latitude},${marker.latLng.longitude}<br>
+                    </p>
+                    ]]></text>
                     </BalloonStyle>
-                </Style>
-            </Placemark>
-        """.trimIndent()
+                    </Style>
+                    </Placemark>"""
             )
         }
-
-        kml.append("</Document>")
-        return kml.toString()
+        return kml.trimIndent()
     }
 }

@@ -1,6 +1,5 @@
 package com.sidharth.lgconnect.util
 
-import com.google.android.gms.maps.model.LatLng
 import com.sidharth.lgconnect.R
 import com.sidharth.lgconnect.domain.model.Chart
 import com.sidharth.lgconnect.domain.model.Planet
@@ -33,7 +32,6 @@ object Constants {
             state = "Beijing",
             country = "China",
             pin = "100101",
-            latLng = LatLng(39.904167, 116.397222),
         ),
         Wonder(
             cover = R.drawable.petra_jordan,
@@ -45,7 +43,6 @@ object Constants {
             state = "Ma'an Governorate",
             country = "Jordan",
             pin = "71815",
-            latLng = LatLng(30.352222, 35.862778)
         ),
         Wonder(
             cover = R.drawable.christ_the_redeemer,
@@ -57,7 +54,6 @@ object Constants {
             state = "Rio de Janeiro",
             country = "Brazil",
             pin = "22290-000",
-            latLng = LatLng(-22.911451, -43.207528)
         ),
         Wonder(
             cover = R.drawable.machu_picchu,
@@ -69,7 +65,6 @@ object Constants {
             state = "Urubamba",
             country = "Peru",
             pin = "08451",
-            latLng = LatLng(-13.168333, -72.522222)
         ),
         Wonder(
             cover = R.drawable.chichen_itza,
@@ -81,7 +76,6 @@ object Constants {
             state = "Yucatán",
             country = "Mexico",
             pin = "77710",
-            latLng = LatLng(20.676389, -88.568333)
         ),
         Wonder(
             cover = R.drawable.roman_colosseum,
@@ -93,7 +87,6 @@ object Constants {
             state = "Lazio",
             country = "Italy",
             pin = "00184",
-            latLng = LatLng(41.890192, 12.491307)
         ),
         Wonder(
             cover = R.drawable.taj_mahal,
@@ -105,7 +98,6 @@ object Constants {
             state = "Uttar Pradesh",
             country = "India",
             pin = "282003",
-            latLng = LatLng(27.175278, 78.039722)
         )
     )
 

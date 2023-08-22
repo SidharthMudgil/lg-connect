@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.model.LatLng
 import com.sidharth.lgconnect.data.repository.AppRepository
 import com.sidharth.lgconnect.databinding.FragmentHomeBinding
+import com.sidharth.lgconnect.domain.model.Wonder
 import com.sidharth.lgconnect.domain.usecase.AddObserverUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.DeleteMarkerUseCaseImpl
 import com.sidharth.lgconnect.domain.usecase.GetHomeDataUseCaseImpl
@@ -25,6 +26,7 @@ import com.sidharth.lgconnect.ui.home.adapter.MarkersAdapter
 import com.sidharth.lgconnect.ui.home.adapter.PlanetAdapter
 import com.sidharth.lgconnect.ui.home.adapter.WondersAdapter
 import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
+import com.sidharth.lgconnect.ui.home.callback.OnWonderClickCallback
 import com.sidharth.lgconnect.ui.home.callback.SwipeToDeleteCallback
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModel
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModelFactory
@@ -39,7 +41,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class HomeFragment : Fragment(), OnItemClickCallback {
+class HomeFragment : Fragment(), OnItemClickCallback, OnWonderClickCallback {
     private lateinit var resourceProvider: ResourceProvider
     private val viewModel: HomeViewModel by activityViewModels {
         HomeViewModelFactory(
@@ -137,8 +139,7 @@ class HomeFragment : Fragment(), OnItemClickCallback {
                 context = it,
                 wonders = viewModel.homeData.wonders,
                 resourceProvider = resourceProvider,
-                lifecycleScope = lifecycleScope,
-                onItemClickCallback = this,
+                onWonderClickCallback = this,
             )
         }
         LinearSnapHelper().attachToRecyclerView(binding.rvWonders)
@@ -227,5 +228,9 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         } else {
             ToastUtils.showToast(requireContext(), "No Network Connection")
         }
+    }
+
+    override fun onWonderClick(wonder: Wonder) {
+        searchPlace(wonder.title)
     }
 }

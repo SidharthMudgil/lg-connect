@@ -1,7 +1,5 @@
 package com.sidharth.lgconnect.domain.model
 
-import com.google.android.gms.maps.model.LatLng
-
 data class Wonder(
     val cover: Int,
     val title: String,
@@ -12,5 +10,4 @@ data class Wonder(
     val state: String,
     val country: String,
     val pin: String,
-    val latLng: LatLng,
 )

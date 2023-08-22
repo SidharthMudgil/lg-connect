@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,11 +17,6 @@ import com.sidharth.lgconnect.util.LGManager
 import com.sidharth.lgconnect.util.ResourceProvider
 import kotlinx.coroutines.launch
 
-const val HINT_USERNAME: String = "username"
-const val HINT_PASSWORD: String = "password"
-const val HINT_IP: String = "192.168.1.14"
-const val HINT_PORT: String = "8080"
-
 class SettingsFragment : Fragment() {
     private lateinit var resourceProvider: ResourceProvider
     private lateinit var binding: FragmentSettingsBinding
@@ -33,12 +27,6 @@ class SettingsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
         lgDialogs = LGDialogs()
-        connectionViewModel.connectionStatus.observe(viewLifecycleOwner) { status ->
-            when (status) {
-                true -> onConnected()
-                else -> onDisconnected()
-            }
-        }
     }
 
     override fun onPause() {
@@ -60,58 +48,30 @@ class SettingsFragment : Fragment() {
     ): View {
         binding = FragmentSettingsBinding.inflate(inflater)
 
-        binding.etUsername.setOnFocusChangeListener { v, hasFocus ->
-            (v as EditText).hint = if (hasFocus) {
-                KeyboardUtils.showSoftKeyboard(v)
-                HINT_USERNAME
-            } else {
-                KeyboardUtils.hideSoftKeyboard(v)
-                ""
+        connectionViewModel.connectionStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                true -> onConnected()
+                else -> onDisconnected()
             }
-        }
-
-        binding.etPassword.setOnFocusChangeListener { v, hasFocus ->
-            (v as EditText).hint = if (hasFocus) {
-                KeyboardUtils.showSoftKeyboard(v)
-                HINT_PASSWORD
-            } else {
-                KeyboardUtils.hideSoftKeyboard(v)
-                ""
-            }
-        }
-
-        binding.etIp.setOnFocusChangeListener { v, hasFocus ->
-            (v as EditText).hint = if (hasFocus) {
-                KeyboardUtils.showSoftKeyboard(v)
-                HINT_IP
-            } else {
-                KeyboardUtils.hideSoftKeyboard(v)
-                ""
-            }
-        }
-
-        binding.etPort.setOnFocusChangeListener { v, hasFocus ->
-            (v as EditText).hint = if (hasFocus) {
-                KeyboardUtils.showSoftKeyboard(v)
-                HINT_PORT
-            } else {
-                KeyboardUtils.hideSoftKeyboard(v)
-                ""
-            }
-        }
-
-        binding.etPort.setOnEditorActionListener { v, _, _ ->
-            KeyboardUtils.hideSoftKeyboard(v)
-            connectIfValid(binding)
-            true
         }
 
         binding.mcvConnect.setOnClickListener {
             KeyboardUtils.hideSoftKeyboard(it)
-            connectIfValid(binding)
+            when (connectionViewModel.connectionStatus.value) {
+                true -> disconnect()
+                else -> connectIfValid(binding)
+            }
         }
 
         return binding.root
+    }
+
+    private fun disconnect() {
+        lifecycleScope.launch {
+            LGManager.getInstance()?.disconnect()
+            connectionViewModel.setConnectionStatus(false)
+            onDisconnected()
+        }
     }
 
     private fun connectIfValid(binding: FragmentSettingsBinding) {
@@ -121,8 +81,13 @@ class SettingsFragment : Fragment() {
             binding.etPort to "Port number is required"
         )
 
-        if (FormValidator.validate(fields)) {
+        lifecycleScope.launch {
+            LGManager.getInstance()?.disconnect()
+            connectionViewModel.setConnectionStatus(false)
+            onDisconnected()
+        }
 
+        if (FormValidator.validate(fields)) {
             binding.tvLabel.text = getString(R.string.connecting)
             binding.mcvConnect.isClickable = false
 
@@ -145,6 +110,7 @@ class SettingsFragment : Fragment() {
                         else -> {
                             connectionViewModel.setConnectionStatus(false)
                             onDisconnected()
+                            lgDialogs?.showConnectionFailedDialog(requireContext())
                         }
                     }
                     binding.mcvConnect.isClickable = true
@@ -154,11 +120,13 @@ class SettingsFragment : Fragment() {
     }
 
     private fun onConnected() {
+        binding.tvLabel.text = getString(R.string.disconnect)
         binding.tvConnectionStatus.text = resourceProvider.getString(R.string.connected)
         binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.lime_green))
     }
 
     private fun onDisconnected() {
+        binding.tvLabel.text = getString(R.string.connect)
         binding.tvConnectionStatus.text = resourceProvider.getString(R.string.disconnected)
         binding.tvConnectionStatus.setTextColor(resourceProvider.getColor(R.color.soft_red))
     }

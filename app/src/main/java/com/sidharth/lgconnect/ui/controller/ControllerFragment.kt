@@ -28,7 +28,7 @@ class ControllerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         resourceProvider = ResourceProvider(requireContext())
         lgDialogs = LGDialogs()
-        connectionViewModel.connectionStatus.observe(viewLifecycleOwner) { status ->
+        connectionViewModel.connectionStatus.observe(this) { status ->
             when (status) {
                 true -> onConnected()
                 else -> onDisconnected()

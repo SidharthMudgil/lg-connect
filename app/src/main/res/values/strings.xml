@@ -38,4 +38,5 @@
     <string name="no_connection_button_text">OK</string>
     <string name="connecting">Connecting…</string>
     <string name="no_markers_found">No markers found</string>
+    <string name="disconnect">Disconnect</string>
 </resources>

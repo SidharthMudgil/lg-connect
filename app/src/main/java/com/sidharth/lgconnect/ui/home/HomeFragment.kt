@@ -28,6 +28,7 @@ import com.sidharth.lgconnect.ui.home.callback.OnItemClickCallback
 import com.sidharth.lgconnect.ui.home.callback.SwipeToDeleteCallback
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModel
 import com.sidharth.lgconnect.ui.home.viewmodel.HomeViewModelFactory
+import com.sidharth.lgconnect.ui.viewmodel.ConnectionViewModel
 import com.sidharth.lgconnect.util.KeyboardUtils
 import com.sidharth.lgconnect.util.LGDialogs
 import com.sidharth.lgconnect.util.LGManager
@@ -54,6 +55,7 @@ class HomeFragment : Fragment(), OnItemClickCallback {
             )
         )
     }
+    private val connectionViewModel: ConnectionViewModel by activityViewModels()
     private var lgDialogs: LGDialogs? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +81,14 @@ class HomeFragment : Fragment(), OnItemClickCallback {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val binding: FragmentHomeBinding = FragmentHomeBinding.inflate(inflater)
+
+        connectionViewModel.connectionStatus.observe(viewLifecycleOwner) { connected ->
+            if (connected) {
+                lifecycleScope.launch {
+                    viewModel.markers.value?.let { LGManager.getInstance()?.showMarkers(it) }
+                }
+            }
+        }
 
         binding.searchLayout.etSearch.setOnEditorActionListener { v, _, _ ->
             KeyboardUtils.hideSoftKeyboard(v)
@@ -138,6 +148,9 @@ class HomeFragment : Fragment(), OnItemClickCallback {
                 binding.rvMarkers.visibility = View.GONE
                 binding.mcvNoMarkers.visibility = View.VISIBLE
             } else {
+                lifecycleScope.launch {
+                    LGManager.getInstance()?.showMarkers(markers)
+                }
                 binding.mcvNoMarkers.visibility = View.GONE
                 binding.rvMarkers.visibility = View.VISIBLE
                 binding.rvMarkers.adapter = context?.let { ctx ->
@@ -150,9 +163,6 @@ class HomeFragment : Fragment(), OnItemClickCallback {
                     )
                 }
                 binding.rvMarkers.adapter?.notifyDataSetChanged()
-                lifecycleScope.launch {
-                    LGManager.getInstance()?.showMarkers(markers)
-                }
             }
         }
         binding.rvMarkers.layoutManager = LinearLayoutManager(
@@ -206,7 +216,7 @@ class HomeFragment : Fragment(), OnItemClickCallback {
                     val latitude = address.latitude
                     val longitude = address.longitude
                     lifecycleScope.launch {
-                        LGManager.getInstance()?.flyTo(LatLng(latitude, longitude))
+                        LGManager.getInstance()?.orbitAround(LatLng(latitude, longitude))
                     }
                 } else {
                     ToastUtils.showToast(requireContext(), "Location not found")

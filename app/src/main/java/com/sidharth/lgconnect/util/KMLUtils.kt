@@ -82,10 +82,6 @@ object KMLUtils {
             </Document>
             </kml>""".trimMargin()
 
-    fun lookAt(latLng: LatLng): String {
-        return """<LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><range>200</range><tilt>0</tilt><heading>79</heading><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
-    }
-
     fun lookAt(camera: CameraPosition): String {
         val zoom =
             156543.03392 * cos(camera.target.latitude * PI / 180) / 2.0.pow(camera.zoom.toDouble())

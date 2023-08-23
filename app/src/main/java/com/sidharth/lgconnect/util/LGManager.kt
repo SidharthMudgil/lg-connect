@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Properties
 
-
 class LGManager(
     private val username: String,
     private val password: String,
@@ -108,23 +107,16 @@ class LGManager(
         execute("echo '' > /var/www/html/kmls.txt")
     }
 
-    private suspend fun clearData() {
-        execute("chmod 777 /var/www/html/kml/$dataSlave.kml; echo '' > /var/www/html/kml/${dataSlave}}.kml")
-    }
-
-    suspend fun sendKml(kml: String, refresh: Boolean = true) {
-        if (refresh) {
-            clearData()
-        }
-        execute("echo '\n$kml' > /var/www/html/kmls.txt")
+    suspend fun sendKml(kml: String) {
+        execute("echo '$kml' > /var/www/html/kmls.txt")
     }
 
     private suspend fun sendKmlToSlave(kml: String) {
-        execute("chmod 777 /var/www/html/kml/$dataSlave.kml; echo '\n$kml' > /var/www/html/kml/${dataSlave}.kml")
+        execute("echo '$kml' > /var/www/html/kml/${dataSlave}.kml")
     }
 
     suspend fun showMarkers(markers: List<Marker>) {
-        execute("echo '${KMLUtils.generateMarkersKml(markers)}' > /var/www/html/kmls.txt")
+        sendKml(KMLUtils.generateMarkersKml(markers))
     }
 
     suspend fun changePlanet(planet: String) {

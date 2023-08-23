@@ -133,6 +133,6 @@ object KMLUtils {
                     </Placemark>"""
             )
         }
-        return kml.trimIndent()
+        return kml.trimMargin()
     }
 }

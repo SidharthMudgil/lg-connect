@@ -14,7 +14,7 @@ object KMLUtils {
         <Document>
         <name>Charts Example</name>
         <ScreenOverlay>
-        <name><![CDATA[<div style="text-align: center; font-size: 20px; font-weight: bold; vertical-align: middle;">Sample Chart</div>]]></name>
+        <name>Sample Chart</name>
         <description>
         <![CDATA[
         <html>
@@ -89,7 +89,7 @@ object KMLUtils {
     }
 
     fun orbitAround(latLng: LatLng): String {
-        return """<gx:duration>3</gx:duration><gx:flyToMode>smooth</gx:flyToMode><LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><altitude>0</altitude><heading>79</heading><tilt>60</tilt><range>500</range><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
+        return """<gx:duration>3</gx:duration><gx:flyToMode>smooth</gx:flyToMode><LookAt><longitude>${latLng.longitude}</longitude><latitude>${latLng.latitude}</latitude><altitude>0</altitude><heading>79</heading><tilt>70</tilt><range>500</range><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>"""
     }
 
     fun generateMarkersKml(markers: List<Marker>): String =

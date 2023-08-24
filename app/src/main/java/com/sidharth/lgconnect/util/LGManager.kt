@@ -108,7 +108,8 @@ class LGManager(
     }
 
     suspend fun sendKml(kml: String) {
-        execute("echo '$kml' > /var/www/html/kmls.txt")
+        execute("echo '$kml' > /var/www/html/mkml.kml")
+        execute("echo 'http://lg1:81/mkml.kml' > /var/www/html/kmls.txt")
     }
 
     private suspend fun sendKmlToSlave(kml: String) {
@@ -161,7 +162,7 @@ class LGManager(
     }
 
     suspend fun relaunch() {
-        for (i in screens downTo 1) {
+        for (i in 1..screens) {
             val command = """/home/$username/bin/lg-relaunch > /home/$username/log.txt;
                 RELAUNCH_CMD="if [ -f /etc/init/lxdm.conf ]; then
                     export SERVICE=lxdm
@@ -182,49 +183,14 @@ class LGManager(
     }
 
     suspend fun restart() {
-        for (i in screens downTo 1) {
+        for (i in 1..screens) {
             execute("""sshpass -p $password ssh -t lg$i "echo $password | sudo -S reboot"""")
         }
     }
 
     suspend fun shutdown() {
-        for (i in screens downTo 1) {
+        for (i in 1..screens) {
             execute("""sshpass -p $password ssh -t lg$i "echo $password | sudo -S poweroff"""")
-        }
-    }
-
-    suspend fun uploadFile(name: String, file: File) {
-        withContext(Dispatchers.IO) {
-            if (session != null && connected) {
-                val channel = session?.openChannel("sftp") as ChannelSftp
-                channel.connect()
-                try {
-                    val remotePath = "/var/www/html/$name.kml"
-                    channel.put(file.absolutePath, remotePath)
-                    channel.chmod(644, remotePath)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    channel.disconnect()
-                } finally {
-                    channel.disconnect()
-                }
-            }
-        }
-    }
-
-    suspend fun deleteFile(name: String) {
-        withContext(Dispatchers.IO) {
-            if (session != null && connected) {
-                val channel = session?.openChannel("sftp") as ChannelSftp
-                channel.connect()
-                try {
-                    channel.rm("/var/www/html/$name")
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    channel.disconnect()
-                }
-            }
         }
     }
 

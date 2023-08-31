@@ -3,13 +3,11 @@ package com.sidharth.lgconnect.util
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.jcraft.jsch.ChannelExec
-import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
 import com.sidharth.lgconnect.domain.model.Marker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.util.Properties
 
 class LGManager(
@@ -100,16 +98,15 @@ class LGManager(
     }
 
     suspend fun clearKml() {
-        for (i in 2..screens) {
-            execute("chmod 777 /var/www/html/kml/slave_$i.kml; echo '' > /var/www/html/kml/slave_$i.kml")
+        val command = "chmod 777 /var/www/html/kml/slave_2.kml; echo '' > /var/www/html/kml/slave_2.kml"
+        for (i in 3..screens) {
+            command.plus("; chmod 777 /var/www/html/kml/slave_$i.kml; echo '' > /var/www/html/kml/slave_$i.kml")
         }
-        execute("echo '' > /tmp/query.txt")
-        execute("echo '' > /var/www/html/kmls.txt")
+        execute(command)
     }
 
     suspend fun sendKml(kml: String) {
-        execute("echo '$kml' > /var/www/html/mkml.kml")
-        execute("echo 'http://lg1:81/mkml.kml' > /var/www/html/kmls.txt")
+        execute("echo '$kml' > /var/www/html/kml/master.kml")
     }
 
     private suspend fun sendKmlToSlave(kml: String) {

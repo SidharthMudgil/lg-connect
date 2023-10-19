@@ -1,6 +1,6 @@
 # LG Connect
 
-Welcome to the LG Connect repository! LG Connect is an Android app developed to connect Liquid Galaxy with Android smartphones and tablets. It enables remote control functionality, allowing users to send charts, add markers, change planets, and view locations. The app also includes a KML code editor for writing and sending KML files to the Liquid Galaxy.
+LG Connect is an Android app developed to connect Liquid Galaxy with Android smartphones and tablets. It enables remote control functionality, allowing users to send charts, add markers, change planets, and view locations. The app also includes a KML code editor for writing and sending KML files to the Liquid Galaxy.
 
 We appreciate your interest in contributing to our project. This README file will provide you with all the necessary information to get started.
 
